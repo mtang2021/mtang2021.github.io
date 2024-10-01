@@ -1,12 +1,431 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>ML Stock Predictor Project - Fall 2024</title>
-<script type="text/javascript"></script>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="DESCRIPTION META TAG">
+  <meta property="og:title" content="SOCIAL MEDIA TITLE TAG"/>
+  <meta property="og:description" content="SOCIAL MEDIA DESCRIPTION TAG TAG"/>
+  <meta property="og:url" content="https://mtang2021.github.io/"/>
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/image/your_banner_image.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+
+  <meta name="twitter:title" content="TWITTER BANNER TITLE META TAG">
+  <meta name="twitter:description" content="TWITTER BANNER DESCRIPTION META TAG">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/your_twitter_banner_image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="KEYWORDS SHOULD BE PLACED HERE">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>ML Group 25 - Fall 2024</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>GitHub Pages initial test</p>
-</body>
-</html>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">ML Stock Predictor (Proposal)</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <h1>Rishi Patel, Baturalp Unlu, Dhruv Chaudhari, Michael Tang, Adrian Kalisz</h1></span>
+                  </div>
+                    <span class="author-block">Georgia Institute of Technology<br></span>
+                    <span class="eql-cntrb"><small><br><sup></sup></small></span>
+                  <!--
+                  <div class="column has-text-centered">
+                    <div class="publication-links">
+                      <span class="link-block">
+                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
+                        class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="fas fa-file-pdf"></i>
+                        </span>
+                        <span>Paper</span>
+                      </a>
+                    </span>
+                    <span class="link-block">
+                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
+                      class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Supplementary</span>
+                    </a>
+                  </span>
+                -->
+                  <span class="link-block">
+                    <a href="https://github.com/mtang2021/ml-stock-predictor-fall2024" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>GitHub Repo</span>
+                  </a>
+                </span>
+            <!--
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/<ARXIV PAPER ID>" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+            -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser video
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video poster="" id="tree" autoplay controls muted loop height="100%">
+        <source src="static/videos/banner_video.mp4"
+        type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+<!-- Paper introduction -->
+<section class="section hero">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Introduction and Background</h2>
+          <div class="content has-text-justified">
+            <p>
+                The stock market reflects a country's economic health and provides valuable insights into its future. While it's impossible to predict a stock's exact movement with absolute certainty, we can reduce risk and forecast potential stock movements by analyzing key indicators such as market sentiment, GDP, and earnings reports.
+            </p>
+            <p>
+                Due to the time-consuming process of analyzing data, algorithmic trading has emerged as an effective measure to analyze the market more safely and efficiently. For this project, We will use FRED economic data, which contains U.S. macroeconomic data, Yahoo Finance, which contains useful APIs for daily market coverage, and FINRA's datasets to develop a profitable investing strategy that helps us predict the direction of the stock market.
+            </p>
+            <p><a href="https://finance.yahoo.com/markets/" target="_blank">Yahoo Finance Stock Market Dataset</a></p>
+            <p><a href="https://fred.stlouisfed.org/ " target="_blank">FRED Dataset</a></p>
+            <p><a href="https://data.sec.gov/" target="_blank">SEC Data</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End introduction -->
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Problem Definition</h2>
+        <div class="content has-text-justified">
+          <p>
+            Predicting the direction of a stock is challenging due to its volatility. Analyzing data from various key indicators for a stock is also time-consuming. To streamline this process and improve market predictions, we will use machine learning models to forecast stock trends and maximize profit. By leveraging historical data and advanced algorithms, these models can identify patterns that may be difficult for humans to detect manually.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+<!-- Methods -->
+<section class="section hero">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Methods</h2>
+          <div class="content has-text-justified">
+            <p>We anticipate that the data might have imperfections, which we aim to correct with these techniques:</p>
+            <ul>
+              <li>
+                For columns with missing data we will use k-nearest neighbors to see how similar data would behave, and based on that substitute the value
+              </li>
+              <li>
+                To reduce the number of features, and make the model simpler, we will use Principal Component Analysis (PCA). This will allow us to drop features while keeping the variance.
+              </li>
+              <li>
+                We will drop the outliers to prevent it from getting thrown off by data that is not representative, to do this we aim to remove the data below and above 2 x IQR (inter quartile range).
+              </li>
+            </ul>
+            <p>
+              For our stock market predictor, we will use models such as Support Vector Machine (SVM), Convolutional Neural Networks (CNN) and Linear regression, but for this project, performance depends mostly on how well we select the data.
+            </p>
+            <ul>
+              <li>
+                SVM is a model that is used for instantaneously changing price predictions in complex stock markets because it has a high success rate in using high-dimensional data and classifying complex data. The model is also used to predict price movements.
+              </li>
+              <li>
+                CNN is traditionally used for graphic and template data. When we want to create an image, past price data is used as a 2-dimensional system in stock market prediction. CNN is effective in revealing subtle patterns in stock market data with its many technical indicators. The difference from SVM is that although both work with large data, CNN helps us visually see non-linear relationships.
+              </li>
+              <li>
+                Linear Regression is one of the simplest models used in stock market prediction. The most efficiency is obtained when the relationship between entry characteristics and exit characteristics is linear. While entry characteristics represent characteristics such as past prices, volume, exit characteristics can be thought of as the expected result and the estimated price that may exist in the future. The difference from the other 2 models is that it can be interpreted quickly in linear data that is not too complicated, but as the data becomes more complex, it may be more effective to use other models.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Methods-->
+
+  <!-- Results & Discussion -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Potential Results & Discussion</h2>
+        <div class="content has-text-justified">
+          <p>
+            To evaluate our model, we will be using metrics from our scikit-learn which include Mean-Squared-Error (MSE) which measures the average squared difference between predicted price and actual price, Mean-Absolute-Error (MAE) which measures average error in prediction and (R)^2 Score which measures how well unseen samples are likely to be predicted by the model. Through these metrics, our project goal is to successfully develop a stock predictive model that accurately forecasts prices of any stock using real-time data with a success rate of 80%. With a MSE of less than 5 dollars, MAE of less than 3 dollars and R^2 of greater than 0.8.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Results & Discussion -->
+
+<!-- References -->
+<section class="section hero">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">References</h2>
+        <div class="content has-text-justified">
+          <p>
+            https://scikit-learn.org/stable/modules/model_evaluation.html
+          </p>
+          <p>
+            https://www.cs.princeton.edu/sites/default/files/uploads/saahil_madge.pdf
+          </p>
+          <p>
+            https://www.ibm.com/topics/linear-regression
+          </p>
+          <p>
+            https://www.geeksforgeeks.org/introduction-convolution-neural-network/
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End References -->
+
+  <!-- Gantt Chart -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Gantt Chart</h2>
+
+      <iframe  src="static/pdfs/Machine Learning Project.pdf" width="100%" height="550">
+          </iframe>
+        
+      </div>
+    </div>
+  </section>
+<!-- End Gantt Chart -->
+
+<!-- Contribution Table -->
+<section class="section hero">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Contribution Table</h2>
+        <div class="content has-text-justified">
+          <p>
+            Placeholder Text
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End References -->
+
+
+
+<!-- 
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+       <div class="item">
+        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
+        <h2 class="subtitle has-text-centered">
+          First image description.
+        </h2>
+      </div>
+      <div class="item">
+        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
+        <h2 class="subtitle has-text-centered">
+          Second image description.
+        </h2>
+      </div>
+      <div class="item">
+        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
+        <h2 class="subtitle has-text-centered">
+         Third image description.
+       </h2>
+     </div>
+     <div class="item">
+      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
+      <h2 class="subtitle has-text-centered">
+        Fourth image description.
+      </h2>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+End image carousel -->
+
+
+
+
+<!-- Youtube video
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      Paper video.
+      <h2 class="title is-3">Video Presentation</h2>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          
+          <div class="publication-video">
+            Youtube embed code here
+            <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+End youtube video -->
+
+
+<!--
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Another Carousel</h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-video1">
+          <video poster="" id="video1" autoplay controls muted loop height="100%">
+            Your video file here
+            <source src="static/videos/carousel1.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-video2">
+          <video poster="" id="video2" autoplay controls muted loop height="100%">
+            Your video file here
+            <source src="static/videos/carousel2.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-video3">
+          <video poster="" id="video3" autoplay controls muted loop height="100%">\
+            Your video file here
+            <source src="static/videos/carousel3.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+End video carousel -->
+
+
+
+
+
+
+<!-- 
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Poster</h2>
+
+      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
+          </iframe>
+        
+      </div>
+    </div>
+  </section>
+End paper poster -->
+
+
+<!--
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>BibTex Code Here</code></pre>
+    </div>
+</section>
+End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+  
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+  </body>
+  </html>
