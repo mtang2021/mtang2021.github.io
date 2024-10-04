@@ -172,30 +172,30 @@
         <div class="column is-four-fifths">
           <h2 class="title is-3">Methods</h2>
           <div class="content has-text-justified">
-            <p>We anticipate that the data might have imperfections, which we aim to correct with these techniques:</p>
+            <p>We anticipate that the data may have imperfections, which we plan to address using the following techniques:</p>
             <ul>
               <li>
-                For columns with missing data we will use k-nearest neighbors to see how similar data would behave, and based on that substitute the value
+                For columns with missing data, we will use K-Nearest Neighbors (KNN) to analyze how similar data behaves and substitute the missing values accordingly.
               </li>
               <li>
-                To reduce the number of features, and make the model simpler, we will use Principal Component Analysis (PCA). This will allow us to drop features while keeping the variance.
+                To reduce the number of features and simplify the model, we will apply Principal Component Analysis (PCA), allowing us to drop features while retaining most of the variance.
               </li>
               <li>
-                We will drop the outliers to prevent it from getting thrown off by data that is not representative, to do this we aim to remove the data below and above 2 x IQR (inter quartile range).
+                We will remove outliers to prevent the model from being skewed by unrepresentative data. Specifically, we aim to remove data points falling below and above 2x the interquartile range (IQR).
               </li>
             </ul>
             <p>
-              For our stock market predictor, we will use models such as Support Vector Machine (SVM), Convolutional Neural Networks (CNN) and Linear regression, but for this project, performance depends mostly on how well we select the data.
+              For our stock market predictor, we will use models such as Support Vector Machine (SVM), Convolutional Neural Networks (CNN), and Linear regression. However, the performance of the project depends largely on how well we select and prepare the data.
             </p>
             <ul>
               <li>
-                SVM is a model that is used for instantaneously changing price predictions in complex stock markets because it has a high success rate in using high-dimensional data and classifying complex data. The model is also used to predict price movements.
+                SVM is effective for predicting rapid price changes in complex stock markets, as it excels in handling high-dimensional data and classifying intricate patterns. It is also commonly used to predict price movements.
               </li>
               <li>
-                CNN is traditionally used for graphic and template data. When we want to create an image, past price data is used as a 2-dimensional system in stock market prediction. CNN is effective in revealing subtle patterns in stock market data with its many technical indicators. The difference from SVM is that although both work with large data, CNN helps us visually see non-linear relationships.
+                CNN, traditionally used for image and pattern recognition, can be adapted for stock market prediction by treating past price data as a two-dimensional system. CNN is effective in revealing subtle patterns in stock data through its many technical indicators. Unlike SVM, CNN provides visual insights into non-linear relationships.
               </li>
               <li>
-                Linear Regression is one of the simplest models used in stock market prediction. The most efficiency is obtained when the relationship between entry characteristics and exit characteristics is linear. While entry characteristics represent characteristics such as past prices, volume, exit characteristics can be thought of as the expected result and the estimated price that may exist in the future. The difference from the other 2 models is that it can be interpreted quickly in linear data that is not too complicated, but as the data becomes more complex, it may be more effective to use other models.
+                Linear Regression is one of the simplest models used in stock market prediction. It works best when the relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices) is linear. While it allows for quick interpretation of simpler, linear data, more complex datasets may benefit from using SVM or CNN.
               </li>
             </ul>
           </div>
@@ -213,7 +213,7 @@
         <h2 class="title is-3">Potential Results & Discussion</h2>
         <div class="content has-text-justified">
           <p>
-            To evaluate our model, we will be using metrics from our scikit-learn which include Mean-Squared-Error (MSE) which measures the average squared difference between predicted price and actual price, Mean-Absolute-Error (MAE) which measures average error in prediction and (R)^2 Score which measures how well unseen samples are likely to be predicted by the model. Through these metrics, our project goal is to successfully develop a stock predictive model that accurately forecasts prices of any stock using real-time data with a success rate of 80%. With a MSE of less than 5 dollars, MAE of less than 3 dollars and R^2 of greater than 0.8.
+            To evaluate our model, we will use metrics from scikit-learn, including Mean-Squared-Error (MSE), which measures the average squared difference between predicted and actual prices, Mean-Absolute-Error (MAE), which measures the average error in prediction, and the R^2 Score, which measures how well the model is likely to predict unseen samples. Our project goal is to develop a stock prediction model that accurately forecasts prices using real-time data, aiming for a success rate of 80%. Specifically, we are targeting an MSE of less than $5, an MAE of less than $3, and an R^2 score greater than 0.8.
           </p>
         </div>
       </div>
