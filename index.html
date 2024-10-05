@@ -178,7 +178,7 @@
                 For columns with missing data, we will use K-Nearest Neighbors (KNN) to analyze how similar data behaves and substitute the missing values accordingly.
               </li>
               <li>
-                To reduce the number of features and simplify the model, we will apply Principal Component Analysis (PCA), allowing us to drop features while retaining most of the variance.
+                To reduce the number of features and simplify the model, we will apply Principal Component Analysis (PCA), allowing us to drop features while retaining most of the variance [1].
               </li>
               <li>
                 We will remove outliers to prevent the model from being skewed by unrepresentative data. Specifically, we aim to remove data points falling below and above 2x the interquartile range (IQR).
@@ -189,13 +189,13 @@
             </p>
             <ul>
               <li>
-                SVM is effective for predicting rapid price changes in complex stock markets, as it excels in handling high-dimensional data and classifying intricate patterns. It is also commonly used to predict price movements.
+                SVM is effective for predicting rapid price changes in complex stock markets, as it excels in handling high-dimensional data and classifying intricate patterns. It is also commonly used to predict price movements [2].
               </li>
               <li>
-                CNN, traditionally used for image and pattern recognition, can be adapted for stock market prediction by treating past price data as a two-dimensional system. CNN is effective in revealing subtle patterns in stock data through its many technical indicators. Unlike SVM, CNN provides visual insights into non-linear relationships.
+                CNN, traditionally used for image and pattern recognition, can be adapted for stock market prediction by treating past price data as a two-dimensional system. CNN is effective in revealing subtle patterns in stock data through its many technical indicators. Unlike SVM, CNN provides visual insights into non-linear relationships [3].
               </li>
               <li>
-                Linear Regression is one of the simplest models used in stock market prediction. It works best when the relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices) is linear. While it allows for quick interpretation of simpler, linear data, more complex datasets may benefit from using SVM or CNN.
+                Linear Regression is one of the simplest models used in stock market prediction. It works best when the relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices) is linear [4]. While it allows for quick interpretation of simpler, linear data, more complex datasets may benefit from using SVM or CNN.
               </li>
             </ul>
           </div>
@@ -228,18 +228,18 @@
     <div class="columns is-centered has-text-centered">
       <div class="column">
         <h2 class="title is-3">References</h2>
-        <div class="content has-text-justified">
-          <p>
-            https://scikit-learn.org/stable/modules/model_evaluation.html
+        <div class="content has-text-justified" style="text-indent: -36px; padding-left: 36px;">
+          <p>	
+            [1] M. Ghorbani and E. K. P. Chong, "Stock price prediction using principal components," PLoS ONE, vol. 15, no. 3, p. e0230124, 2020, doi: 10.1371/journal.pone.0230124.
           </p>
           <p>
-            https://www.cs.princeton.edu/sites/default/files/uploads/saahil_madge.pdf
+            [2] S. Madge and S. Bhatt, "Predicting stock price direction using support vector machines," 2015.
           </p>
           <p>
-            https://www.ibm.com/topics/linear-regression
+            [3] S. Chen and H. He, "Stock Prediction Using Convolutional Neural Network," IOP Conf. Ser.: Mater. Sci. Eng. 435 012026, 2018, doi: 10.1088/1757-899X/435/1/012026
           </p>
           <p>
-            https://www.geeksforgeeks.org/introduction-convolution-neural-network/
+            [4] T. Rishi, "Stock market analysis using linear regression," Proceedings of the Jepson Undergraduate Conference on International Economics, vol. 4, article 4, 2022. Available at: https://scholarworks.uni.edu/jucie/vol4/iss1/4.
           </p>
         </div>
       </div>
@@ -269,9 +269,32 @@
       <div class="column">
         <h2 class="title is-3">Contribution Table</h2>
         <div class="content has-text-justified">
-          <p>
-            Placeholder Text
-          </p>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Proposal Contributions</th>
+            </tr>
+            <tr>
+              <td>Rishi Patel</td>
+              <td>Introduction/Background, Problem Definition, Gantt Chart</td>
+            </tr>
+            <tr>
+              <td>Baturalp Unlu</td>
+              <td>Methods, Results & Discussion</td>
+            </tr>
+            <tr>
+              <td>Dhruv Chaudhari</td>
+              <td>Introduction/Background, Results & Discussion, Presentation/Video</td>
+            </tr>
+            <tr>
+              <td>Michael Tang</td>
+              <td>GitHub Pages Setup, Methods, References, Presentation</td>
+            </tr>
+            <tr>
+              <td>Adrian Kalisz</td>
+              <td>Methods, Results & Discussion, References</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
