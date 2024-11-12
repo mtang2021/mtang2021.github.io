@@ -198,6 +198,13 @@
                 Linear Regression is one of the simplest models used in stock market prediction. It works best when the relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices) is linear [4]. While it allows for quick interpretation of simpler, linear data, more complex datasets may benefit from using SVM or CNN.
               </li>
             </ul>
+            <h3>Midterm Checkpoint Methods Implementation</h3>
+            <p>
+              We have implemented Ridge Regression as our supervised learning model, using historical stock data from Yahoo Finance via the yfinance library in Python. This model captures trends over time by establishing a linear relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices). Ridge Regression's regularization penalizes large coefficients, helping to reduce overfitting. Additionally, we standardize the input features to have a mean of 0 and a standard deviation of 1.
+            </p>
+            <p>
+              To enhance the model, we have expanded the dimensionality of the data by raising features to different powers, ranging from no expansion to powers up to 4 (i.e., x, x<sup>2</sup>, x<sup>3</sup>, x<sup>4</sup>). We also standardize these expanded features to maintain the significance of the regularization term and to prevent the matrix (X<sup>T</sup>X + λ(I)) from becoming ill-conditioned. Missing data is handled with linear interpolation, using the two closest points in the data frame to estimate missing values under the assumption of a linear relationship.
+            </p>
           </div>
         </div>
       </div>
@@ -215,12 +222,101 @@
           <p>
             To evaluate our model, we will use metrics from scikit-learn, including Mean-Squared-Error (MSE), which measures the average squared difference between predicted and actual prices, Mean-Absolute-Error (MAE), which measures the average error in prediction, and the R^2 Score, which measures how well the model is likely to predict unseen samples. Our project goal is to develop a stock prediction model that accurately forecasts prices using real-time data, aiming for a success rate of 80%. Specifically, we are targeting an MSE of less than $5, an MAE of less than $3, and an R^2 score greater than 0.8.
           </p>
+          <h3>Midterm Checkpoint Progress</h3>
+          <p>
+            Currently, the team has run the model on Amazon and Tesla stock data from the past 20 years. For Tesla, the model achieved approximately 72% accuracy, likely due to Tesla's rapid growth in more recent years, which makes older data less predictive. In contrast, the Amazon model nearly reached the 90% accuracy benchmark. Expanding into higher dimensions had the most notable impact; initially, both ridge and linear regression models performed similarly, with accuracy between 60% and 67%. By increasing the polynomial degree, we improved accuracy, with the optimal performance typically occurring around degrees 7 to 8, as higher dimensions tended to lead to overfitting. We evaluated accuracy using the R<sup>2</sup> scores on the test data.
+          </p>
+          <p>
+            While it is challenging to visualize metrics from higher-dimensional spaces in two dimensions, visualizations still illustrate how the shape changes with each polynomial degree, roughly aligning with the stock value distribution over time and explaining the improvements in R<sup>2</sup> scores. The model's performance was limited by the lack of additional data pre-processing techniques and by the model's simplicity. Although extending features to higher dimensions significantly improved accuracy, scaling for proper ridge regression regularization may have constrained further score improvements.
+          </p>
+          <p>
+            Potential solutions include:
+          </p>
+          <li>
+            Testing linear regression with higher-degree features without standardizing the inputs
+          </li>
+          <li>
+            Exploring alternative algorithms, as outlined in the methods section
+          </li>
         </div>
       </div>
     </div>
   </div>
 </section>
 <!-- End Results & Discussion -->
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+       <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/Tesla_1_dim.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Stock price prediction for Tesla with 1 dimension.
+        </h2>
+      </div>
+      <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/Tesla_7_dim.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Stock price prediction for Tesla with 7 dimensions.
+        </h2>
+      </div>
+      <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/Tesla_14_dim.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Stock price prediction for Tesla with 14 dimensions.
+       </h2>
+     </div>
+    <div class="item">
+      <div style="text-align: center;">
+        <img src="static/images/Tesla_best.png" alt="MY ALT TEXT"/>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        Out of various dimensions, the best performing model for Tesla was with 7 dimensions, yielding a maximum average R<sup>2</sup> score of 0.72.
+      </h2>
+    </div>
+     <div class="item">
+      <div style="text-align: center;">
+        <img src="static/images/Amazon_1_dim.png" alt="MY ALT TEXT"/>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        Stock price prediction for Amazon with 1 dimension.
+      </h2>
+    </div>
+    <div class="item">
+      <div style="text-align: center;">
+        <img src="static/images/Amazon_8_dim.png" alt="MY ALT TEXT"/>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        Stock price prediction for Amazon with 8 dimensions.
+      </h2>
+    </div>
+    <div class="item">
+      <div style="text-align: center;">
+        <img src="static/images/Amazon_14_dim.png" alt="MY ALT TEXT"/>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        Stock price prediction for Amazon with 14 dimensions.
+      </h2>
+    </div>
+    <div class="item">
+      <div style="text-align: center;">
+        <img src="static/images/Amazon_best.png" alt="MY ALT TEXT"/>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        Out of various dimensions, the best performing model for Amazon was with 8 dimensions, yielding a maximum average R<sup>2</sup> score of 0.89.
+      </h2>
+    </div>
+  </div>
+</div>
+</div>
+</section>
 
 <!-- References -->
 <section class="section hero">
@@ -272,27 +368,27 @@
           <table>
             <tr>
               <th>Name</th>
-              <th>Proposal Contributions</th>
+              <th>Midterm Contributions</th>
             </tr>
             <tr>
               <td>Rishi Patel</td>
-              <td>Introduction/Background, Problem Definition, Gantt Chart</td>
+              <td>Data Pre-Processing, Gantt Chart, Linear/Ridge Regression Implementation</td>
             </tr>
             <tr>
               <td>Baturalp Unlu</td>
-              <td>Methods, Results & Discussion</td>
+              <td>Visualization, Methods, Results Write-up</td>
             </tr>
             <tr>
               <td>Dhruv Chaudhari</td>
-              <td>Introduction/Background, Results & Discussion, Presentation/Video</td>
+              <td>Data Pre-Processing, Methods Write-up, Visualization</td>
             </tr>
             <tr>
               <td>Michael Tang</td>
-              <td>GitHub Pages Setup, Methods, References, Presentation</td>
+              <td>Linear/Ridge Regression Implementation, Github Pages & Repo Deployment</td>
             </tr>
             <tr>
               <td>Adrian Kalisz</td>
-              <td>Methods, Results & Discussion, References</td>
+              <td>Linear/Ridge Regression Implementation, Methods, Results Write-up, Visualization</td>
             </tr>
           </table>
         </div>
@@ -301,43 +397,6 @@
   </div>
 </section>
 <!-- End References -->
-
-
-
-<!-- 
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          First image description.
-        </h2>
-      </div>
-      <div class="item">
-        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item">
-        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item">
-      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-End image carousel -->
 
 
 
