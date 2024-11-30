@@ -205,6 +205,13 @@
             <p>
               To enhance the model, we have expanded the dimensionality of the data by raising features to different powers, ranging from no expansion to powers up to 4 (i.e., x, x<sup>2</sup>, x<sup>3</sup>, x<sup>4</sup>). We also standardize these expanded features to maintain the significance of the regularization term and to prevent the matrix (X<sup>T</sup>X + λ(I)) from becoming ill-conditioned. Missing data is handled with linear interpolation, using the two closest points in the data frame to estimate missing values under the assumption of a linear relationship.
             </p>
+            <h3>Final Report Methods Implementation</h3>
+            <p>
+              Initially, we planned to implement SVM for stock price classification. However, as our project evolved, we determined that predicting continuous stock prices would benefit more from SVR. SVR builds upon SVM by adapting its principles to regression tasks and allows to predict precise outcomes instead of categorical classifications. SVR was implemented to handle the high-dimensional nature of stock market data and provide precise predictions for rapid price changes. By leveraging its ability to classify non-linear relationships, the model performs exceptionally and achieves an accuracy up to 98% when applied to historical stock data for the ticker $AAPL. The exceptional accuracy of the model reflects on its ability to handle high-dimensional data in predicting rapid price changes. Furthermore, the extension to higher dimensions with data standardization was also implemented in this model. It did not yield as much of an improvement as it did with the Ridge Regression, but an improvement was still found.
+            </p>
+            <p>
+              Traditionally used for image recognition, CNN was adapted for stock market prediction by treating historical stock data as a two-dimensional representation. This allowed the model to identify non-linear relationships in the data and enhance the prediction accuracy. CNNs are uniquely suited for capturing complex patterns that may not be apparent with traditional methods such as SVM or Ridge Regression. The implemented CNN model consists of 1D convolution followed by two Dense layers, which proved sufficient for this task.
+            </p>
           </div>
         </div>
       </div>
@@ -245,6 +252,79 @@
 </section>
 <!-- End Results & Discussion -->
 
+<!-- Quantitative metrics -->
+<section class="section hero">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3">Quantitative Metrics</h2>
+        <div class="content has-text-justified">
+          <p>
+            The following statistics are for stock ticker $TSLA, using the highest achieved average R<sup>2</sup> score.
+          </p>
+          <div class="columns is-centered">
+            <ol>
+              <li>
+                Support Vector Regression (SVR)
+                <ul>
+                  <li>MSE: 65.503</li>
+                  <li>MAE: 4.847</li>
+                  <li>MSE: 0.984</li>
+                </ul>
+              </li>
+              <li>
+                Convolutional Neural Network (CNN)
+                <ul>
+                  <li>MSE: 571.693</li>
+                  <li>MAE: 11.629</li>
+                  <li>MSE: 0.948</li>
+                </ul>
+              </li>
+              <li>
+                Ridge Regression
+                <ul>
+                  <li>MSE: 2818.539</li>
+                  <li>MAE: 39.245</li>
+                  <li>MSE: 0.730</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End quantitative metrics -->
+
+  <!-- Analysis and Comparison -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Analysis and Comparison of the 3 Algorithms</h2>
+          <div class="content has-text-justified">
+            <p>
+              Based on the metrics, the SVR model appeared to explain 98.4% of the variance (R<sup>2</sup> = 0.984) in the stock price data. The relatively low MSE and MAE indicate that the model’s predictions are close to the actual values. This is a realistic outcome, especially with the data being preprocessed well and relatively smooth (e.g., without significant outliers or large volatility).
+            </p>
+            <p>
+              While CNN’s R<sup>2</sup> score is slightly lower than SVR, the model still performs well overall. The higher MSE and MAE suggest that it is less accurate than SVR on average, but not by a significant margin. Since this is a standalone CNN, that doesn't utilize time-series preprocessing or hybrid architectures (e.g., CNN-LSTMs), the performance is as expected.
+            </p>
+            <p>
+              Ridge Regression struggles compared to the other models. The much higher MSE and MAE, combined with a lower R<sup>2</sup> score, suggest that it cannot capture the complex relationships in the data as effectively as SVR or CNN. This is expected because Ridge Regression is a linear model, and stock price movements are rarely linear. However, it can still serve as a good baseline for comparison.
+            </p>
+            <h3>Next Steps</h3>
+            <p>
+              We can refine the data preprocessing methods by normalizing or scaling the features and potentially using returns or log-returns as the target variable instead of raw prices, which can mitigate issues with wide dynamic ranges. For the SVR model, fine-tuning key hyperparameters, such as the kernel type and regularization parameter, may further improve performance. For the CNN model, we can consider hybrid models such as CNN-LSTMs if the data is time-series-based, or the inclusion of temporal features like moving averages, lagged variables, or Fourier-transformed components. We can also revisit Ridge Regression with advanced feature engineering to better capture any linear relationships present in the data. These steps collectively aim to improve our models’ overall predictive capabilities.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Analysis and Comparison -->
+
+<!-- Ridge Regression visuals -->
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container">
@@ -317,6 +397,94 @@
 </div>
 </div>
 </section>
+<!-- Ridge Regression visuals -->
+
+<!-- Ridge Regression visuals -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <div style="text-align: center;">
+            <img src="static/images/AAPL_CNN.png" alt="MY ALT TEXT"/>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Stock price prediction for Apple using CNN.
+          </h2>
+        </div>
+        <div class="item">
+          <div style="text-align: center;">
+            <img src="static/images/CNN_metrics.png" alt="MY ALT TEXT"/>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Quantitative metrics for CNN model on Apple.
+          </h2>
+        </div>
+       <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/TSLA_CNN.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Stock price prediction for Tesla using CNN.
+        </h2>
+      </div>
+      <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/CNN_metrics.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Quantitative metrics for CNN model on Tesla.
+        </h2>
+      </div>
+      
+  </div>
+</div>
+</div>
+</section>
+<!-- Ridge Regression visuals -->
+
+<!-- Ridge Regression visuals -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <div style="text-align: center;">
+            <img src="static/images/AAPL_SVR.png" alt="MY ALT TEXT"/>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Stock price prediction for Apple using SVR.
+          </h2>
+        </div>
+        <div class="item">
+          <div style="text-align: center;">
+            <img src="static/images/SVR_metrics2.png" alt="MY ALT TEXT"/>
+          </div>
+          <h2 class="subtitle has-text-centered">
+            Quantitative metrics for SVR model on Apple.
+          </h2>
+        </div>
+       <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/TSLA_SVR.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Stock price prediction for Tesla using SVR.
+        </h2>
+      </div>
+      <div class="item">
+        <div style="text-align: center;">
+          <img src="static/images/SVR_metrics.png" alt="MY ALT TEXT"/>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Quantitative metrics for SVR model on Tesla.
+        </h2>
+      </div>
+  </div>
+</div>
+</div>
+</section>
+<!-- Ridge Regression visuals -->
 
 <!-- References -->
 <section class="section hero">
@@ -368,27 +536,27 @@
           <table>
             <tr>
               <th>Name</th>
-              <th>Midterm Contributions</th>
+              <th>Final Report Contributions</th>
             </tr>
             <tr>
               <td>Rishi Patel</td>
-              <td>Data Pre-Processing, Gantt Chart, Linear/Ridge Regression Implementation</td>
+              <td>SVR Implementation, Presentation, Gantt Chart</td>
             </tr>
             <tr>
               <td>Baturalp Unlu</td>
-              <td>Visualization, Methods, Results Write-up</td>
+              <td>SVR Implementation, CNN Implementation</td>
             </tr>
             <tr>
               <td>Dhruv Chaudhari</td>
-              <td>Data Pre-Processing, Methods Write-up, Visualization</td>
+              <td>Methods Write-up, Presentation, Presentation Video</td>
             </tr>
             <tr>
               <td>Michael Tang</td>
-              <td>Linear/Ridge Regression Implementation, Github Pages & Repo Deployment</td>
+              <td>CNN Implementation, Quantitative Metrics, Analysis & Comparison, Next Steps, Visualization, GitHub Pages & Repo Deployment</td>
             </tr>
             <tr>
               <td>Adrian Kalisz</td>
-              <td>Linear/Ridge Regression Implementation, Methods, Results Write-up, Visualization</td>
+              <td>SVR Implementation, CNN Implementation, Methods Write-up</td>
             </tr>
           </table>
         </div>
