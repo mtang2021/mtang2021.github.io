@@ -2,106 +2,395 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
-  <!-- Replace the content tag with appropriate information -->
   <meta name="description" content="GT CS 4641 Machine Learning Project Fall 2024">
   <meta property="og:title" content="ML Group 25 - Stock Predictor"/>
   <meta property="og:description" content="CS 4641 Machine Learning Project for Fall 2024"/>
   <meta property="og:url" content="https://mtang2021.github.io/"/>
-  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
   <meta property="og:image" content="static/image/your_banner_image.png" />
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-
-
-  <meta name="twitter:title" content="TWITTER BANNER TITLE META TAG">
-  <meta name="twitter:description" content="TWITTER BANNER DESCRIPTION META TAG">
-  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:title" content="ML Stock Predictor - GT CS 4641">
+  <meta name="twitter:description" content="Machine Learning approach to stock price prediction using SVR, CNN, and Ridge Regression">
   <meta name="twitter:image" content="static/images/your_twitter_banner_image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Keywords for your paper to be indexed by-->
-  <meta name="keywords" content="KEYWORDS SHOULD BE PLACED HERE">
+  <meta name="keywords" content="machine learning, stock prediction, SVR, CNN, ridge regression, Georgia Tech">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-  <title>ML Group 25 - Fall 2024</title>
+  <title>ML Group 25 - Stock Predictor</title>
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-  rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script src="static/js/bulma-carousel.min.js"></script>
   <script src="static/js/bulma-slider.min.js"></script>
   <script src="static/js/index.js"></script>
+  
+  <style>
+    :root {
+      --primary: #2C3E50;
+      --secondary: #34495E;
+      --accent: #3498DB;
+      --highlight: #E74C3C;
+      --light: #ECF0F1;
+      --dark: #1a252f;
+      --text: #2C3E50;
+      --muted: #7f8c8d;
+      --border: #bdc3c7;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: var(--text);
+      background-color: #f9f9f9;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    
+    .title, .subtitle {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .title.is-1 {
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    
+    .hero {
+      position: relative;
+    }
+    
+    .hero.is-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+    }
+    
+    .hero.is-primary .title, .hero.is-primary .subtitle {
+      color: white;
+    }
+    
+    .hero-body {
+      z-index: 1;
+    }
+    
+    .section {
+      padding: 3rem 1.5rem;
+    }
+    
+    .section.is-light {
+      background-color: #f5f7fa;
+      border-top: 1px solid #e9ecef;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .container {
+      max-width: 1200px;
+    }
+    
+    .card {
+      border-radius: 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button.is-dark {
+      background-color: var(--primary);
+      border-color: transparent;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    
+    .button.is-dark:hover {
+      background-color: var(--secondary);
+    }
+    
+    .button.is-rounded {
+      border-radius: 0;
+    }
+    
+    .content h2 {
+      font-family: 'Roboto Mono', monospace;
+      color: var(--primary);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .content h3 {
+      font-family: 'Roboto Mono', monospace;
+      color: var(--secondary);
+      margin-top: 2rem;
+    }
+    
+    .metric-card {
+      background-color: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--accent);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'Roboto Mono', monospace;
+    }
+    
+    .metric-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    table th {
+      background-color: var(--dark);
+      color: white;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+    }
+    
+    table td {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+    }
+    
+    table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    
+    table.metric-table td {
+      padding: 0.75rem;
+      border: none;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    table.metric-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    table.metric-table td.has-text-right {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+    
+    .hero-circuit-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 0;
+    }
+    
+    .carousel {
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+    }
+    
+    .footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 3rem 1.5rem;
+    }
+    
+    .footer a {
+      color: var(--accent);
+    }
+    
+    .footer a:hover {
+      color: white;
+    }
+    
+    .section-divider {
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      margin: 2rem 0;
+      width: 100px;
+    }
+    
+    .publication-title {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+    
+    .publication-title:after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+    }
+    
+    .gear-icon {
+      position: absolute;
+      opacity: 0.1;
+      z-index: 0;
+    }
+    
+    /* Add responsive adjustments */
+    @media screen and (max-width: 768px) {
+      .section {
+        padding: 2rem 1rem;
+      }
+      
+      .title.is-1 {
+        font-size: 2.5rem;
+      }
+      
+      .metric-card {
+        margin-bottom: 1rem;
+      }
+    }
+    
+    /* Custom styling for the results carousel */
+    .results-carousel {
+      overflow: hidden;
+    }
+    
+    .results-carousel .item {
+      margin: 5px;
+      overflow: hidden;
+      padding: 20px;
+      font-size: 0;
+    }
+    
+    .results-carousel .item.is-active {
+      display: block;
+    }
+    
+    .results-carousel .item img {
+      max-height: 400px;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Model comparisons section */
+    .model-comparison {
+      background-color: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--primary);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .model-name {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
 <body>
 
-
-  <section class="hero">
+  <section class="hero is-primary is-medium">
+    <div class="hero-circuit-bg"></div>
     <div class="hero-body">
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">ML Stock Predictor (Proposal)</h1>
+            <h1 class="title is-1 publication-title">ML STOCK PREDICTOR</h1>
             <div class="is-size-5 publication-authors">
-              <!-- Paper authors -->
               <span class="author-block">
-                <h1>Rishi Patel, Baturalp Unlu, Dhruv Chaudhari, Michael Tang, Adrian Kalisz</h1></span>
-                  </div>
-                    <span class="author-block">Georgia Institute of Technology<br></span>
-                    <span class="eql-cntrb"><small><br><sup></sup></small></span>
-                  <!--
-                  <div class="column has-text-centered">
-                    <div class="publication-links">
-                      <span class="link-block">
-                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
-                        class="external-link button is-normal is-rounded is-dark">
-                        <span class="icon">
-                          <i class="fas fa-file-pdf"></i>
-                        </span>
-                        <span>Paper</span>
-                      </a>
-                    </span>
-                    <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
-                      class="external-link button is-normal is-rounded is-dark">
-                      <span class="icon">
-                        <i class="fas fa-file-pdf"></i>
-                      </span>
-                      <span>Supplementary</span>
-                    </a>
-                  </span>
-                -->
-                  <span class="link-block">
-                    <a href="https://github.com/mtang2021/ml-stock-predictor-fall2024" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fab fa-github"></i>
-                    </span>
-                    <span>GitHub Repo</span>
-                  </a>
-                </span>
-            <!--
-                <span class="link-block">
-                  <a href="https://arxiv.org/abs/<ARXIV PAPER ID>" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
+                <h1>Rishi Patel, Baturalp Unlu, Dhruv Chaudhari, Michael Tang, Adrian Kalisz</h1>
               </span>
-            -->
+            </div>
+            <span class="author-block">Georgia Institute of Technology<br></span>
+            <span class="eql-cntrb"><small><br><sup></sup></small></span>
+            
+            <div class="publication-links mt-4">
+              <span class="link-block">
+                <a href="https://github.com/mtang2021/ml-stock-predictor-fall2024" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>GitHub Repo</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Introduction and Background -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">INTRODUCTION & BACKGROUND</h2>
+        <div class="section-divider"></div>
+        <div class="content has-text-justified">
+          <p>
+            The stock market reflects a country's economic health and provides valuable insights into its future. While it's impossible to predict a stock's exact movement with absolute certainty, we can reduce risk and forecast potential stock movements by analyzing key indicators such as market sentiment, GDP, and earnings reports.
+          </p>
+          <p>
+            Due to the time-consuming process of analyzing data, algorithmic trading has emerged as an effective measure to analyze the market more safely and efficiently. For this project, We will use FRED economic data, which contains U.S. macroeconomic data, Yahoo Finance, which contains useful APIs for daily market coverage, and FINRA's datasets to develop a profitable investing strategy that helps us predict the direction of the stock market.
+          </p>
+          
+          <div class="columns mt-5">
+            <div class="column">
+              <div class="box has-text-centered">
+                <span class="icon is-large has-text-info">
+                  <i class="fas fa-chart-line fa-2x"></i>
+                </span>
+                <p class="is-size-5 mt-3"><a href="https://finance.yahoo.com/markets/" target="_blank">Yahoo Finance</a></p>
+                <p class="is-size-7">Stock Market Dataset</p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="box has-text-centered">
+                <span class="icon is-large has-text-danger">
+                  <i class="fas fa-database fa-2x"></i>
+                </span>
+                <p class="is-size-5 mt-3"><a href="https://fred.stlouisfed.org/" target="_blank">FRED Dataset</a></p>
+                <p class="is-size-7">Economic Data</p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="box has-text-centered">
+                <span class="icon is-large has-text-success">
+                  <i class="fas fa-file-alt fa-2x"></i>
+                </span>
+                <p class="is-size-5 mt-3"><a href="https://data.sec.gov/" target="_blank">SEC Data</a></p>
+                <p class="is-size-7">Financial Reporting</p>
+              </div>
             </div>
           </div>
         </div>
@@ -110,388 +399,370 @@
   </div>
 </section>
 
-<!-- Teaser video
-<section class="hero teaser">
+<!-- Problem Definition -->
+<section class="section is-light">
   <div class="container is-max-desktop">
-    <div class="hero-body">
-      <video poster="" id="tree" autoplay controls muted loop height="100%">
-        <source src="static/videos/banner_video.mp4"
-        type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
-      </h2>
-    </div>
-  </div>
-</section> -->
-
-<!-- Paper introduction -->
-<section class="section hero">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Introduction and Background</h2>
-          <div class="content has-text-justified">
-            <p>
-                The stock market reflects a country's economic health and provides valuable insights into its future. While it's impossible to predict a stock's exact movement with absolute certainty, we can reduce risk and forecast potential stock movements by analyzing key indicators such as market sentiment, GDP, and earnings reports.
-            </p>
-            <p>
-                Due to the time-consuming process of analyzing data, algorithmic trading has emerged as an effective measure to analyze the market more safely and efficiently. For this project, We will use FRED economic data, which contains U.S. macroeconomic data, Yahoo Finance, which contains useful APIs for daily market coverage, and FINRA's datasets to develop a profitable investing strategy that helps us predict the direction of the stock market.
-            </p>
-            <p><a href="https://finance.yahoo.com/markets/" target="_blank">Yahoo Finance Stock Market Dataset</a></p>
-            <p><a href="https://fred.stlouisfed.org/ " target="_blank">FRED Dataset</a></p>
-            <p><a href="https://data.sec.gov/" target="_blank">SEC Data</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- End introduction -->
-
-<!-- Paper abstract -->
-<section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
+    <div class="columns is-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Problem Definition</h2>
+        <h2 class="title is-3">PROBLEM DEFINITION</h2>
+        <div class="section-divider"></div>
         <div class="content has-text-justified">
           <p>
             Predicting the direction of a stock is challenging due to its volatility. Analyzing data from various key indicators for a stock is also time-consuming. To streamline this process and improve market predictions, we will use machine learning models to forecast stock trends and maximize profit. By leveraging historical data and advanced algorithms, these models can identify patterns that may be difficult for humans to detect manually.
           </p>
+          
+          <div class="columns mt-5 is-centered">
+            <div class="column is-10">
+              <div class="box" style="background-color: #f8f9fa; border-left: 4px solid var(--accent);">
+                <div class="content">
+                  <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace;">Core Challenges</h4>
+                  <ul>
+                    <li><strong>High Volatility:</strong> Stock prices experience rapid fluctuations influenced by numerous factors</li>
+                    <li><strong>Complex Patterns:</strong> Market behavior involves intricate patterns that require sophisticated analysis</li>
+                    <li><strong>Time-Intensive Analysis:</strong> Manual examination of indicators is prohibitively time-consuming</li>
+                    <li><strong>Data Volume:</strong> Processing vast amounts of historical and real-time data efficiently</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<!-- End paper abstract -->
 
 <!-- Methods -->
-<section class="section hero">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Methods</h2>
-          <div class="content has-text-justified">
-            <p>We anticipate that the data may have imperfections, which we plan to address using the following techniques:</p>
-            <ul>
-              <li>
-                For columns with missing data, we will use K-Nearest Neighbors (KNN) to analyze how similar data behaves and substitute the missing values accordingly.
-              </li>
-              <li>
-                To reduce the number of features and simplify the model, we will apply Principal Component Analysis (PCA), allowing us to drop features while retaining most of the variance [1].
-              </li>
-              <li>
-                We will remove outliers to prevent the model from being skewed by unrepresentative data. Specifically, we aim to remove data points falling below and above 2x the interquartile range (IQR).
-              </li>
-            </ul>
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">METHODS</h2>
+        <div class="section-divider"></div>
+        <div class="content has-text-justified">
+          <h3>Data Preparation</h3>
+          <p>We anticipated data imperfections and addressed them using these techniques:</p>
+          
+          <div class="columns">
+            <div class="column">
+              <div class="box" style="height: 100%; border-top: 3px solid var(--accent);">
+                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace;">Missing Data Handling</h4>
+                <p>For columns with missing data, we used K-Nearest Neighbors (KNN) to analyze how similar data behaves and substitute the missing values accordingly.</p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="box" style="height: 100%; border-top: 3px solid var(--primary);">
+                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace;">Dimensionality Reduction</h4>
+                <p>To reduce features and simplify the model, we applied Principal Component Analysis (PCA), allowing us to drop features while retaining most of the variance [1].</p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="box" style="height: 100%; border-top: 3px solid var(--highlight);">
+                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace;">Outlier Removal</h4>
+                <p>We removed outliers to prevent model skew from unrepresentative data, focusing on data points falling outside 2x the interquartile range (IQR).</p>
+              </div>
+            </div>
+          </div>
+          
+          <h3 class="mt-6">Model Implementations</h3>
+          
+          <div class="model-comparison">
+            <h4 class="model-name">Support Vector Regression (SVR)</h4>
             <p>
-              For our stock market predictor, we will use models such as Support Vector Machine (SVM), Convolutional Neural Networks (CNN), and Linear regression. However, the performance of the project depends largely on how well we select and prepare the data.
+              Initially planned as SVM for classification, we evolved to SVR for continuous price predictions. SVR builds upon SVM by adapting its principles to regression tasks, allowing precise outcome predictions instead of categorical classifications. The model was implemented to handle the high-dimensional nature of stock market data, achieving up to 98% accuracy when applied to historical Apple stock data. SVR's exceptional performance reflects its ability to handle high-dimensional data and identify non-linear relationships.
             </p>
-            <ul>
-              <li>
-                SVM is effective for predicting rapid price changes in complex stock markets, as it excels in handling high-dimensional data and classifying intricate patterns. It is also commonly used to predict price movements [2].
-              </li>
-              <li>
-                CNN, traditionally used for image and pattern recognition, can be adapted for stock market prediction by treating past price data as a two-dimensional system. CNN is effective in revealing subtle patterns in stock data through its many technical indicators. Unlike SVM, CNN provides visual insights into non-linear relationships [3].
-              </li>
-              <li>
-                Linear Regression is one of the simplest models used in stock market prediction. It works best when the relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices) is linear [4]. While it allows for quick interpretation of simpler, linear data, more complex datasets may benefit from using SVM or CNN.
-              </li>
-            </ul>
-            <h3>Midterm Checkpoint Methods Implementation</h3>
+          </div>
+          
+          <div class="model-comparison">
+            <h4 class="model-name">Convolutional Neural Network (CNN)</h4>
             <p>
-              We have implemented Ridge Regression as our supervised learning model, using historical stock data from Yahoo Finance via the yfinance library in Python. This model captures trends over time by establishing a linear relationship between input features (e.g., past prices, volume) and output features (e.g., expected future prices). Ridge Regression's regularization penalizes large coefficients, helping to reduce overfitting. Additionally, we standardize the input features to have a mean of 0 and a standard deviation of 1.
+              Traditionally used for image recognition, CNN was adapted for stock market prediction by treating historical stock data as a two-dimensional representation. This allowed the model to identify non-linear relationships in the data and enhance prediction accuracy. CNNs are uniquely suited for capturing complex patterns that may not be apparent with traditional methods. Our implemented CNN model consists of 1D convolution followed by two Dense layers, which proved sufficient for this task.
             </p>
+          </div>
+          
+          <div class="model-comparison">
+            <h4 class="model-name">Ridge Regression</h4>
             <p>
-              To enhance the model, we have expanded the dimensionality of the data by raising features to different powers, ranging from no expansion to powers up to 4 (i.e., x, x<sup>2</sup>, x<sup>3</sup>, x<sup>4</sup>). We also standardize these expanded features to maintain the significance of the regularization term and to prevent the matrix (X<sup>T</sup>X + λ(I)) from becoming ill-conditioned. Missing data is handled with linear interpolation, using the two closest points in the data frame to estimate missing values under the assumption of a linear relationship.
-            </p>
-            <h3>Final Report Methods Implementation</h3>
-            <p>
-              Initially, we planned to implement SVM for stock price classification. However, as our project evolved, we determined that predicting continuous stock prices would benefit more from SVR. SVR builds upon SVM by adapting its principles to regression tasks and allows to predict precise outcomes instead of categorical classifications. SVR was implemented to handle the high-dimensional nature of stock market data and provide precise predictions for rapid price changes. By leveraging its ability to classify non-linear relationships, the model performs exceptionally and achieves an accuracy up to 98% when applied to historical stock data for the ticker $AAPL. The exceptional accuracy of the model reflects on its ability to handle high-dimensional data in predicting rapid price changes. Furthermore, the extension to higher dimensions with data standardization was also implemented in this model. It did not yield as much of an improvement as it did with the Ridge Regression, but an improvement was still found.
-            </p>
-            <p>
-              Traditionally used for image recognition, CNN was adapted for stock market prediction by treating historical stock data as a two-dimensional representation. This allowed the model to identify non-linear relationships in the data and enhance the prediction accuracy. CNNs are uniquely suited for capturing complex patterns that may not be apparent with traditional methods such as SVM or Ridge Regression. The implemented CNN model consists of 1D convolution followed by two Dense layers, which proved sufficient for this task.
+              We implemented Ridge Regression using historical stock data from Yahoo Finance. This model establishes a linear relationship between input features and expected future prices, with regularization to penalize large coefficients and reduce overfitting. We enhanced the model by expanding data dimensionality (raising features to different powers up to x⁴) and standardizing these expanded features to maintain regularization significance. Missing data was handled with linear interpolation, using the two closest points to estimate missing values.
             </p>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  <!-- End Methods-->
-
-  <!-- Results & Discussion -->
-<section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Potential Results & Discussion</h2>
-        <div class="content has-text-justified">
-          <p>
-            To evaluate our model, we will use metrics from scikit-learn, including Mean-Squared-Error (MSE), which measures the average squared difference between predicted and actual prices, Mean-Absolute-Error (MAE), which measures the average error in prediction, and the R^2 Score, which measures how well the model is likely to predict unseen samples. Our project goal is to develop a stock prediction model that accurately forecasts prices using real-time data, aiming for a success rate of 80%. Specifically, we are targeting an MSE of less than $5, an MAE of less than $3, and an R^2 score greater than 0.8.
-          </p>
-          <h3>Midterm Checkpoint Progress</h3>
-          <p>
-            Currently, the team has run the model on Amazon and Tesla stock data from the past 20 years. For Tesla, the model achieved approximately 72% accuracy, likely due to Tesla's rapid growth in more recent years, which makes older data less predictive. In contrast, the Amazon model nearly reached the 90% accuracy benchmark. Expanding into higher dimensions had the most notable impact; initially, both ridge and linear regression models performed similarly, with accuracy between 60% and 67%. By increasing the polynomial degree, we improved accuracy, with the optimal performance typically occurring around degrees 7 to 8, as higher dimensions tended to lead to overfitting. We evaluated accuracy using the R<sup>2</sup> scores on the test data.
-          </p>
-          <p>
-            While it is challenging to visualize metrics from higher-dimensional spaces in two dimensions, visualizations still illustrate how the shape changes with each polynomial degree, roughly aligning with the stock value distribution over time and explaining the improvements in R<sup>2</sup> scores. The model's performance was limited by the lack of additional data pre-processing techniques and by the model's simplicity. Although extending features to higher dimensions significantly improved accuracy, scaling for proper ridge regression regularization may have constrained further score improvements.
-          </p>
-          <p>
-            Potential solutions include:
-          </p>
-          <li>
-            Testing linear regression with higher-degree features without standardizing the inputs
-          </li>
-          <li>
-            Exploring alternative algorithms, as outlined in the methods section
-          </li>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
-<!-- End Results & Discussion -->
 
-<!-- Quantitative metrics -->
-<section class="section hero">
+<!-- Quantitative Metrics -->
+<section class="section is-light">
   <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column">
-        <h2 class="title is-3">Quantitative Metrics</h2>
-        <div class="content has-text-justified">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">QUANTITATIVE METRICS</h2>
+        <div class="section-divider"></div>
+        <div class="content">
           <p>
             The following statistics are for stock ticker $TSLA, using the highest achieved average R<sup>2</sup> score.
           </p>
-          <div class="columns is-centered">
-            <ol>
-              <li>
-                Support Vector Regression (SVR)
-                <ul>
-                  <li>MSE: 65.503</li>
-                  <li>MAE: 4.847</li>
-                  <li>R<sup>2</sup> Score: 0.984</li>
-                </ul>
-              </li>
-              <li>
-                Convolutional Neural Network (CNN)
-                <ul>
-                  <li>MSE: 571.693</li>
-                  <li>MAE: 11.629</li>
-                  <li>R<sup>2</sup> Score: 0.948</li>
-                </ul>
-              </li>
-              <li>
-                Ridge Regression
-                <ul>
-                  <li>MSE: 2818.539</li>
-                  <li>MAE: 39.245</li>
-                  <li>R<sup>2</sup> Score: 0.730</li>
-                </ul>
-              </li>
-            </ol>
+          
+          <div class="columns mt-4 is-centered">
+            <div class="column is-10">
+              <div class="columns">
+                <div class="column">
+                  <div class="box" style="border-top: 5px solid #3498db; height: 100%;">
+                    <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace; margin-bottom: 1.5rem;">SVR</h4>
+                    <table class="table is-fullwidth metric-table">
+                      <tbody>
+                        <tr>
+                          <td class="has-text-weight-bold">MSE</td>
+                          <td class="has-text-right">65.50</td>
+                        </tr>
+                        <tr>
+                          <td class="has-text-weight-bold">MAE</td>
+                          <td class="has-text-right">4.85</td>
+                        </tr>
+                        <tr>
+                          <td class="has-text-weight-bold">R² Score</td>
+                          <td class="has-text-right">0.984</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div class="column">
+                  <div class="box" style="border-top: 5px solid #9b59b6; height: 100%;">
+                    <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace; margin-bottom: 1.5rem;">CNN</h4>
+                    <table class="table is-fullwidth metric-table">
+                      <tbody>
+                        <tr>
+                          <td class="has-text-weight-bold">MSE</td>
+                          <td class="has-text-right">571.69</td>
+                        </tr>
+                        <tr>
+                          <td class="has-text-weight-bold">MAE</td>
+                          <td class="has-text-right">11.63</td>
+                        </tr>
+                        <tr>
+                          <td class="has-text-weight-bold">R² Score</td>
+                          <td class="has-text-right">0.948</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div class="column">
+                  <div class="box" style="border-top: 5px solid #e74c3c; height: 100%;">
+                    <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace; margin-bottom: 1.5rem;">RIDGE</h4>
+                    <table class="table is-fullwidth metric-table">
+                      <tbody>
+                        <tr>
+                          <td class="has-text-weight-bold">MSE</td>
+                          <td class="has-text-right">2818.54</td>
+                        </tr>
+                        <tr>
+                          <td class="has-text-weight-bold">MAE</td>
+                          <td class="has-text-right">39.25</td>
+                        </tr>
+                        <tr>
+                          <td class="has-text-weight-bold">R² Score</td>
+                          <td class="has-text-right">0.730</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<!-- End quantitative metrics -->
 
-  <!-- Analysis and Comparison -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Analysis and Comparison of the 3 Algorithms</h2>
-          <div class="content has-text-justified">
-            <p>
-              Based on the metrics, the SVR model appeared to explain 98.4% of the variance (R<sup>2</sup> = 0.984) in the stock price data. The relatively low MSE and MAE indicate that the model’s predictions are close to the actual values. This is a realistic outcome, especially with the data being preprocessed well and relatively smooth (e.g., without significant outliers or large volatility).
-            </p>
-            <p>
-              While CNN’s R<sup>2</sup> score is slightly lower than SVR, the model still performs well overall. The higher MSE and MAE suggest that it is less accurate than SVR on average, but not by a significant margin. Since this is a standalone CNN, that doesn't utilize time-series preprocessing or hybrid architectures (e.g., CNN-LSTMs), the performance is as expected.
-            </p>
-            <p>
-              Ridge Regression struggles compared to the other models. The much higher MSE and MAE, combined with a lower R<sup>2</sup> score, suggest that it cannot capture the complex relationships in the data as effectively as SVR or CNN. This is expected because Ridge Regression is a linear model, and stock price movements are rarely linear. However, it can still serve as a good baseline for comparison.
-            </p>
-            <h3>Next Steps</h3>
-            <p>
-              We can refine the data preprocessing methods by normalizing or scaling the features and potentially using returns or log-returns as the target variable instead of raw prices, which can mitigate issues with wide dynamic ranges. For the SVR model, fine-tuning key hyperparameters, such as the kernel type and regularization parameter, may further improve performance. For the CNN model, we can consider hybrid models such as CNN-LSTMs if the data is time-series-based, or the inclusion of temporal features like moving averages, lagged variables, or Fourier-transformed components. We can also revisit Ridge Regression with advanced feature engineering to better capture any linear relationships present in the data. These steps collectively aim to improve our models’ overall predictive capabilities.
-            </p>
+<!-- Analysis and Comparison -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">ANALYSIS & COMPARISON</h2>
+        <div class="section-divider"></div>
+        <div class="content has-text-justified">
+          <div class="columns">
+            <div class="column">
+              <div class="box" style="border-left: 4px solid #3498db;">
+                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace; color: #3498db;">SVR Performance</h4>
+                <p>
+                  The SVR model explained 98.4% of the variance (R² = 0.984) in the stock price data. The relatively low MSE and MAE indicate predictions close to actual values. This impressive performance highlights SVR's capacity to handle the high-dimensional nature of stock data and identify non-linear relationships.
+                </p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="box" style="border-left: 4px solid #9b59b6;">
+                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace; color: #9b59b6;">CNN Performance</h4>
+                <p>
+                  While CNN's R² score (0.948) is slightly lower than SVR, the model still performs remarkably well. The higher MSE and MAE suggest slightly less accuracy than SVR, but the model effectively captures complex patterns in the data without specialized time-series preprocessing.
+                </p>
+              </div>
+            </div>
+            <div class="column">
+              <div class="box" style="border-left: 4px solid #e74c3c;">
+                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace; color: #e74c3c;">Ridge Performance</h4>
+                <p>
+                  Ridge Regression struggles comparatively with a lower R² score (0.730) and higher error metrics. This is expected as Ridge is a linear model attempting to model inherently non-linear stock price movements, though it still provides a useful baseline for comparison.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <h3 class="mt-5">Next Steps</h3>
+          <div class="box" style="background-color: #f8f9fa;">
+            <div class="content">
+              <ul>
+                <li><strong>Data Preprocessing Refinement:</strong> Normalize features and consider using returns/log-returns instead of raw prices</li>
+                <li><strong>SVR Optimization:</strong> Fine-tune kernel selection and regularization parameters</li>
+                <li><strong>CNN Enhancement:</strong> Implement hybrid CNN-LSTM models for better time-series analysis</li>
+                <li><strong>Feature Engineering:</strong> Include temporal features like moving averages and Fourier-transformed components</li>
+                <li><strong>Model Ensemble:</strong> Combine predictions from multiple models for improved robustness</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <!-- Analysis and Comparison -->
-
-<!-- Ridge Regression visuals -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/Tesla_1_dim.png" alt="MY ALT TEXT"/>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          Stock price prediction for Tesla with 1 dimension.
-        </h2>
-      </div>
-      <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/Tesla_7_dim.png" alt="MY ALT TEXT"/>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          Stock price prediction for Tesla with 7 dimensions.
-        </h2>
-      </div>
-      <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/Tesla_14_dim.png" alt="MY ALT TEXT"/>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          Stock price prediction for Tesla with 14 dimensions.
-       </h2>
-     </div>
-    <div class="item">
-      <div style="text-align: center;">
-        <img src="static/images/Tesla_best.png" alt="MY ALT TEXT"/>
-      </div>
-      <h2 class="subtitle has-text-centered">
-        Out of various dimensions, the best performing model for Tesla was with 7 dimensions, yielding a maximum average R<sup>2</sup> score of 0.72.
-      </h2>
-    </div>
-     <div class="item">
-      <div style="text-align: center;">
-        <img src="static/images/Amazon_1_dim.png" alt="MY ALT TEXT"/>
-      </div>
-      <h2 class="subtitle has-text-centered">
-        Stock price prediction for Amazon with 1 dimension.
-      </h2>
-    </div>
-    <div class="item">
-      <div style="text-align: center;">
-        <img src="static/images/Amazon_8_dim.png" alt="MY ALT TEXT"/>
-      </div>
-      <h2 class="subtitle has-text-centered">
-        Stock price prediction for Amazon with 8 dimensions.
-      </h2>
-    </div>
-    <div class="item">
-      <div style="text-align: center;">
-        <img src="static/images/Amazon_14_dim.png" alt="MY ALT TEXT"/>
-      </div>
-      <h2 class="subtitle has-text-centered">
-        Stock price prediction for Amazon with 14 dimensions.
-      </h2>
-    </div>
-    <div class="item">
-      <div style="text-align: center;">
-        <img src="static/images/Amazon_best.png" alt="MY ALT TEXT"/>
-      </div>
-      <h2 class="subtitle has-text-centered">
-        Out of various dimensions, the best performing model for Amazon was with 8 dimensions, yielding a maximum average R<sup>2</sup> score of 0.89.
-      </h2>
     </div>
   </div>
-</div>
-</div>
 </section>
-<!-- Ridge Regression visuals -->
 
-<!-- Ridge Regression visuals -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item">
-          <div style="text-align: center;">
-            <img src="static/images/AAPL_CNN.png" alt="MY ALT TEXT"/>
+<!-- Visualizations Section -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">VISUALIZATIONS</h2>
+        <div class="section-divider"></div>
+        
+        <h3 class="title is-4 mt-5">Ridge Regression Results</h3>
+        <div class="hero is-small">
+          <div class="hero-body">
+            <div class="container">
+              <div id="results-carousel" class="carousel results-carousel">
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/Tesla_1_dim.png" alt="Tesla 1 dimension prediction"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Stock price prediction for Tesla with 1 dimension.
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/Tesla_7_dim.png" alt="Tesla 7 dimensions prediction"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Stock price prediction for Tesla with 7 dimensions.
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/Tesla_best.png" alt="Tesla best model"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Best performing model for Tesla with 7 dimensions (R² score: 0.72).
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/Amazon_best.png" alt="Amazon best model"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Best performing model for Amazon with 8 dimensions (R² score: 0.89).
+                  </h2>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 class="subtitle has-text-centered">
-            Stock price prediction for Apple using CNN.
-          </h2>
         </div>
-        <div class="item">
-          <div style="text-align: center;">
-            <img src="static/images/CNN_metrics.png" alt="MY ALT TEXT"/>
+        
+        <h3 class="title is-4 mt-5">CNN Results</h3>
+        <div class="hero is-small">
+          <div class="hero-body">
+            <div class="container">
+              <div id="results-carousel" class="carousel results-carousel">
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/AAPL_CNN.png" alt="Apple CNN prediction"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Stock price prediction for Apple using CNN.
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/CNN_metrics.png" alt="CNN metrics"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Quantitative metrics for CNN model performance.
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/TSLA_CNN.png" alt="Tesla CNN prediction"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Stock price prediction for Tesla using CNN.
+                  </h2>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 class="subtitle has-text-centered">
-            Quantitative metrics for CNN model on Apple.
-          </h2>
         </div>
-       <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/TSLA_CNN.png" alt="MY ALT TEXT"/>
+        
+        <h3 class="title is-4 mt-5">SVR Results</h3>
+        <div class="hero is-small">
+          <div class="hero-body">
+            <div class="container">
+              <div id="results-carousel" class="carousel results-carousel">
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/AAPL_SVR.png" alt="Apple SVR prediction"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Stock price prediction for Apple using SVR.
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/SVR_metrics2.png" alt="SVR metrics"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Quantitative metrics for SVR model on Apple.
+                  </h2>
+                </div>
+                <div class="item">
+                  <div style="text-align: center;">
+                    <img src="static/images/TSLA_SVR.png" alt="Tesla SVR prediction"/>
+                  </div>
+                  <h2 class="subtitle has-text-centered">
+                    Stock price prediction for Tesla using SVR.
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h2 class="subtitle has-text-centered">
-          Stock price prediction for Tesla using CNN.
-        </h2>
       </div>
-      <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/CNN_metrics.png" alt="MY ALT TEXT"/>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          Quantitative metrics for CNN model on Tesla.
-        </h2>
-      </div>
-      
+    </div>
   </div>
-</div>
-</div>
 </section>
-<!-- Ridge Regression visuals -->
-
-<!-- Ridge Regression visuals -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item">
-          <div style="text-align: center;">
-            <img src="static/images/AAPL_SVR.png" alt="MY ALT TEXT"/>
-          </div>
-          <h2 class="subtitle has-text-centered">
-            Stock price prediction for Apple using SVR.
-          </h2>
-        </div>
-        <div class="item">
-          <div style="text-align: center;">
-            <img src="static/images/SVR_metrics2.png" alt="MY ALT TEXT"/>
-          </div>
-          <h2 class="subtitle has-text-centered">
-            Quantitative metrics for SVR model on Apple.
-          </h2>
-        </div>
-       <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/TSLA_SVR.png" alt="MY ALT TEXT"/>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          Stock price prediction for Tesla using SVR.
-        </h2>
-      </div>
-      <div class="item">
-        <div style="text-align: center;">
-          <img src="static/images/SVR_metrics.png" alt="MY ALT TEXT"/>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          Quantitative metrics for SVR model on Tesla.
-        </h2>
-      </div>
-  </div>
-</div>
-</div>
-</section>
-<!-- Ridge Regression visuals -->
 
 <!-- References -->
-<section class="section hero">
+<section class="section">
   <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column">
-        <h2 class="title is-3">References</h2>
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">REFERENCES</h2>
+        <div class="section-divider"></div>
         <div class="content has-text-justified" style="text-indent: -36px; padding-left: 36px;">
           <p>	
             [1] M. Ghorbani and E. K. P. Chong, "Stock price prediction using principal components," PLoS ONE, vol. 15, no. 3, p. e0230124, 2020, doi: 10.1371/journal.pone.0230124.
@@ -510,172 +781,101 @@
     </div>
   </div>
 </section>
-<!-- End References -->
 
-  <!-- Gantt Chart -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Gantt Chart</h2>
-
-      <iframe  src="static/pdfs/Gantt.pdf" width="100%" height="550">
-          </iframe>
-        
+<!-- Gantt Chart -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">PROJECT TIMELINE</h2>
+        <div class="section-divider"></div>
+        <div class="box">
+          <iframe src="static/pdfs/Gantt.pdf" width="100%" height="550" style="border: none;"></iframe>
+        </div>
       </div>
     </div>
-  </section>
-<!-- End Gantt Chart -->
+  </div>
+</section>
 
 <!-- Contribution Table -->
-<section class="section hero">
+<section class="section">
   <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column">
-        <h2 class="title is-3">Contribution Table</h2>
-        <div class="content has-text-justified">
-          <table>
-            <tr>
-              <th>Name</th>
-              <th>Final Report Contributions</th>
-            </tr>
-            <tr>
-              <td>Rishi Patel</td>
-              <td>SVR Implementation, Presentation, Gantt Chart</td>
-            </tr>
-            <tr>
-              <td>Baturalp Unlu</td>
-              <td>SVR Implementation, CNN Implementation</td>
-            </tr>
-            <tr>
-              <td>Dhruv Chaudhari</td>
-              <td>Methods Write-up, Presentation, Presentation Video</td>
-            </tr>
-            <tr>
-              <td>Michael Tang</td>
-              <td>CNN Implementation, Quantitative Metrics, Analysis & Comparison, Next Steps, Visualization, GitHub Pages & Repo Deployment</td>
-            </tr>
-            <tr>
-              <td>Adrian Kalisz</td>
-              <td>SVR Implementation, CNN Implementation, Methods Write-up</td>
-            </tr>
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">TEAM CONTRIBUTIONS</h2>
+        <div class="section-divider"></div>
+        <div class="content">
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th style="color: white">Team Member</th>
+                <th style="color: white">Final Report Contributions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Rishi Patel</strong></td>
+                <td>SVR Implementation, Presentation, Gantt Chart</td>
+              </tr>
+              <tr>
+                <td><strong>Baturalp Unlu</strong></td>
+                <td>SVR Implementation, CNN Implementation</td>
+              </tr>
+              <tr>
+                <td><strong>Dhruv Chaudhari</strong></td>
+                <td>Methods Write-up, Presentation, Presentation Video</td>
+              </tr>
+              <tr>
+                <td><strong>Michael Tang</strong></td>
+                <td>CNN Implementation, Quantitative Metrics, Analysis & Comparison, Next Steps, Visualization, GitHub Pages & Repo Deployment</td>
+              </tr>
+              <tr>
+                <td><strong>Adrian Kalisz</strong></td>
+                <td>SVR Implementation, CNN Implementation, Methods Write-up</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
 </section>
-<!-- End References -->
 
-
-
-
-<!-- Youtube video
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      Paper video.
-      <h2 class="title is-3">Video Presentation</h2>
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          
-          <div class="publication-video">
-            Youtube embed code here
-            <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-End youtube video -->
-
-
-<!--
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <video poster="" id="video1" autoplay controls muted loop height="100%">
-            Your video file here
-            <source src="static/videos/carousel1.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <video poster="" id="video2" autoplay controls muted loop height="100%">
-            Your video file here
-            <source src="static/videos/carousel2.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <video poster="" id="video3" autoplay controls muted loop height="100%">\
-            Your video file here
-            <source src="static/videos/carousel3.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-End video carousel -->
-
-
-
-
-
-
-<!-- 
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
-
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
-      </div>
-    </div>
-  </section>
-End paper poster -->
-
-
-<!--
-  <section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      <pre><code>BibTex Code Here</code></pre>
-    </div>
-</section>
-End BibTex citation -->
-
-
-  <footer class="footer">
+<footer class="footer">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-8">
-        <div class="content">
-
+        <div class="content has-text-centered">
           <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
+            © Michael Tang, 2025. All rights reserved.
           </p>
-
         </div>
       </div>
     </div>
   </div>
 </footer>
 
-<!-- Statcounter tracking code -->
-  
-<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+<!-- Scripts for carousel functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize all carousels
+    var carousels = bulmaCarousel.attach('.carousel', {
+      slidesToScroll: 1,
+      slidesToShow: 1,
+      infinite: true,
+      autoplay: false
+    });
 
-    <!-- End of Statcounter Code -->
+    // Add .is-active to the current slide
+    carousels.forEach(carousel => {
+      carousel.on('before:show', state => {
+        const items = carousel.element.querySelectorAll('.item');
+        items.forEach(item => item.classList.add('is-active'));
+        items[state.index].classList.add('is-active');
+      });
+    });
+  });
+</script>
 
-  </body>
-  </html>
+</body>
+</html>
