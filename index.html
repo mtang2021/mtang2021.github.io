@@ -53,36 +53,7 @@
                 <div class="terminal-title">mtang@digital-ecosystem ~ $</div>
             </div>
             <div class="terminal-content" id="terminal-content">
-                <div class="terminal-line visible">
-                    <span class="terminal-prompt">$</span>
-                    <span class="terminal-command">echo "Welcome to Michael Tang's Digital Ecosystem"</span>
-                </div>
-                <div class="terminal-line visible">
-                    Welcome to Michael Tang's Digital Ecosystem
-                </div>
-                <div class="terminal-line visible">
-                    <span class="terminal-prompt">$</span>
-                    <span class="terminal-command">whoami</span>
-                </div>
-                <div class="terminal-line visible">
-                    Michael Tang - AI and Software Engineer specializing in machine learning, NLP, and financial data analysis.
-                </div>
-                <div class="terminal-line visible">
-                    <span class="terminal-prompt">$</span>
-                    <span class="terminal-command">cat navigation.txt</span>
-                </div>
-                <div class="terminal-line visible">
-                    <pre>
-Navigation Commands: 
-• view about - Display information about Michael Tang
-• view experience - Show professional background
-• view projects - Browse portfolio projects
-• view contact - Get contact information
-• clear - Clear the terminal
-• help - Display more command info
-                    </pre>
-                </div>
-                
+                <!-- Terminal content will be dynamically typed in -->
                 <div class="terminal-input-line">
                     <span class="terminal-prompt">$</span>
                     <input type="text" class="terminal-input" id="terminal-input" placeholder="Type a command...">
@@ -485,14 +456,105 @@ Navigation Commands:
             let isMinimized = false;
             const terminalInterface = document.getElementById('terminal-interface');
             
+            // Terminal boot sequence content
+            const bootSequence = [
+                { type: 'command', text: 'echo "Welcome to Michael Tang\'s Digital Ecosystem"' },
+                { type: 'output', text: 'Welcome to Michael Tang\'s Digital Ecosystem' },
+                { type: 'command', text: 'whoami' },
+                { type: 'output', text: 'Michael Tang - AI and Software Engineer specializing in machine learning, NLP, and financial data analysis.' },
+                { type: 'command', text: 'cat navigation.txt' },
+                { type: 'output', text: `Navigation Commands:` },
+                { type: 'output', text: `• view about - Display information about me` },
+                { type: 'output', text: `• view experience - Show professional background` },
+                { type: 'output', text: `• view projects - Browse portfolio projects` },
+                { type: 'output', text: `• view contact - Get contact information` },
+                { type: 'output', text: `• clear - Clear the terminal` },
+                { type: 'output', text: `• help - Display more command info` }
+            ];
+            
+            // Text anim
+            function typeText(element, text, speed = 4) {
+                return new Promise(resolve => {
+                    let i = 0;
+                    element.textContent = '';
+                    
+                    function typeNextChar() {
+                        if (i < text.length) {
+                            element.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(typeNextChar, speed);
+                        } else {
+                            resolve();
+                        }
+                    }
+                    
+                    typeNextChar();
+                });
+            }
+
+            // Function to add a line to terminal with typing animation
+            async function addTypedLine(content, isCommand = true, typingSpeed = 4) {
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                terminalContent.insertBefore(line, terminalContent.lastElementChild);
+                
+                if (isCommand) {
+                    const prompt = document.createElement('span');
+                    prompt.className = 'terminal-prompt';
+                    prompt.textContent = '$ ';
+                    line.appendChild(prompt);
+                    
+                    const command = document.createElement('span');
+                    command.className = 'terminal-command';
+                    line.appendChild(command);
+                    
+                    // Type the command character by character
+                    await typeText(command, content, typingSpeed);
+                } else {
+                    // Type the output character by character
+                    await typeText(line, content, typingSpeed);
+                }
+                
+                // Add visible class for fade-in effect
+                line.classList.add('visible');
+                
+                // Scroll to bottom
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+                
+                return line;
+            }
+
+            // Start the boot sequence
+            async function startBootSequence() {
+                // Faster typing for commands, slower for reading outputs
+                const commandSpeed = 15; 
+                const outputSpeed = 5;
+                
+                for (const item of bootSequence) {
+                    if (item.type === 'command') {
+                        await addTypedLine(item.text, true, commandSpeed);
+                        // Pause after command to simulate execution
+                        await new Promise(resolve => setTimeout(resolve, 200));
+                    } else {
+                        await addTypedLine(item.text, false, outputSpeed);
+                        // Longer pause after output to give time to read
+                        await new Promise(resolve => setTimeout(resolve, 400));
+                    }
+                }
+                
+                // Focus input after boot sequence completes
+                terminalInput.focus();
+            }
+
             // Terminal commands
             const commands = {
                 'help': () => {
-                    addTerminalLine('Available commands:', false);
-                    addTerminalLine('• view [section] - View a section (about, experience, projects, skills, contact)', false);
-                    addTerminalLine('• clear - Clear the terminal', false);
-                    addTerminalLine('• exit - Minimize the terminal', false);
-                    addTerminalLine('• help - Display this help message', false);
+                    addTypedLine('Available commands:', false);
+                    addTypedLine('• clear - Clear the terminal', false);
+                    addTypedLine('• exit - Minimize the terminal', false);
+                    addTypedLine('• help - Display this help message', false);
+                    addTypedLine('• view [section] - View a section (about, experience, projects, contact)', false);
+
                 },
                 'clear': () => {
                     // Remove all lines except the input line
@@ -508,7 +570,7 @@ Navigation Commands:
                 },
                 'view': (section) => {
                     if (!section) {
-                        addTerminalLine('Please specify a section to view: about, experience, projects, skills, contact', false);
+                        addTypedLine('Please specify a section to view: about, experience, projects, skills, contact', false);
                         return;
                     }
                     
@@ -543,14 +605,14 @@ Navigation Commands:
                     }
                     
                     if (foundSection) {
-                        addTerminalLine(`Navigating to ${section} section...`, false);
+                        addTypedLine(`Navigating to ${section} section...`, false);
                         
                         // If terminal is maximized, minimize it
                         setTimeout(() => {
                             minimizeTerminal();
                         }, 1000);
                     } else {
-                        addTerminalLine(`Section "${section}" not found. Available sections: about, experience, projects, contact`, false);
+                        addTypedLine(`Section "${section}" not found. Available sections: about, experience, projects, contact`, false);
                     }
                 }
             };
@@ -610,33 +672,25 @@ Navigation Commands:
                     terminalInterface.style.display = 'none';
                 }, 700);
             });
+
+            terminalMinimize.addEventListener('click', () => {
+                terminalInterface.style.transform = 'translate(-50%, 46vh) scale(1)';
+                terminalInterface.style.opacity = '0.4';
+                isMinimized = true;
+            });
+
+            terminalMaximize.addEventListener('click', () => {
+                terminalInterface.style.transform = 'translate(-50%, -50%) scale(1)';
+                terminalInterface.style.opacity = '1';
+                isMinimized = false;
+                
+                // Focus input
+                setTimeout(() => {
+                    terminalInput.focus();
+                }, 700);
+            })
             
-            function minimizeTerminal() {
-                if (!isMinimized) {
-                    terminalInterface.style.transform = 'translate(-50%, 40vh) scale(0.2)';
-                    terminalInterface.style.opacity = '0.7';
-                    isMinimized = true;
-                }
-            }
-            
-            function maximizeTerminal() {
-                if (isMinimized) {
-                    terminalInterface.style.transform = 'translate(-50%, -50%) scale(1)';
-                    terminalInterface.style.opacity = '1';
-                    isMinimized = false;
-                    
-                    // Focus input
-                    setTimeout(() => {
-                        terminalInput.focus();
-                    }, 700);
-                }
-            }
-            
-            terminalMinimize.addEventListener('click', minimizeTerminal);
-            terminalMaximize.addEventListener('click', maximizeTerminal);
-            
-            // Double click on terminal header to toggle minimize/maximize
-            document.querySelector('.terminal-header').addEventListener('dblclick', (e) => {
+            document.querySelector('.terminal-header').addEventListener('click', (e) => {
                 if (e.target.closest('.terminal-button')) return;
                 
                 if (isMinimized) {
@@ -646,17 +700,10 @@ Navigation Commands:
                 }
             });
             
-            // Click on minimized terminal to maximize
-            terminalInterface.addEventListener('click', () => {
-                if (isMinimized) {
-                    maximizeTerminal();
-                }
-            });
-            
-            // Focus terminal input on load
+            // Start boot sequence after short delay
             setTimeout(() => {
-                terminalInput.focus();
-            }, 1000);
+                startBootSequence();
+            }, 500);
         }
         
         // Setup interactive text
