@@ -1,881 +1,951 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="description" content="GT CS 4641 Machine Learning Project Fall 2024">
-  <meta property="og:title" content="ML Group 25 - Stock Predictor"/>
-  <meta property="og:description" content="CS 4641 Machine Learning Project for Fall 2024"/>
-  <meta property="og:url" content="https://mtang2021.github.io/"/>
-  <meta property="og:image" content="static/image/your_banner_image.png" />
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:title" content="ML Stock Predictor - GT CS 4641">
-  <meta name="twitter:description" content="Machine Learning approach to stock price prediction using SVR, CNN, and Ridge Regression">
-  <meta name="twitter:image" content="static/images/your_twitter_banner_image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="keywords" content="machine learning, stock prediction, SVR, CNN, ridge regression, Georgia Tech">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>ML Group 25 - Stock Predictor</title>
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
-  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
-  <script defer src="static/js/fontawesome.all.min.js"></script>
-  <script src="static/js/bulma-carousel.min.js"></script>
-  <script src="static/js/bulma-slider.min.js"></script>
-  <script src="static/js/index.js"></script>
-  
-  <style>
-    :root {
-      --primary: #2C3E50;
-      --secondary: #34495E;
-      --accent: #3498DB;
-      --highlight: #E74C3C;
-      --light: #ECF0F1;
-      --dark: #1a252f;
-      --text: #2C3E50;
-      --muted: #7f8c8d;
-      --border: #bdc3c7;
-    }
-    
-    body {
-      font-family: 'Roboto', sans-serif;
-      color: var(--text);
-      background-color: #f9f9f9;
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-    
-    .title, .subtitle {
-      font-family: 'Roboto Mono', monospace;
-      font-weight: 600;
-      color: var(--primary);
-    }
-    
-    .title.is-1 {
-      font-weight: 700;
-      letter-spacing: -1px;
-    }
-    
-    .hero {
-      position: relative;
-    }
-    
-    .hero.is-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: white;
-    }
-    
-    .hero.is-primary .title, .hero.is-primary .subtitle {
-      color: white;
-    }
-    
-    .hero-body {
-      z-index: 1;
-    }
-    
-    .section {
-      padding: 3rem 1.5rem;
-    }
-    
-    .section.is-light {
-      background-color: #f5f7fa;
-      border-top: 1px solid #e9ecef;
-      border-bottom: 1px solid #e9ecef;
-    }
-    
-    .container {
-      max-width: 1200px;
-    }
-    
-    .card {
-      border-radius: 0;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .button.is-dark {
-      background-color: var(--primary);
-      border-color: transparent;
-      color: white;
-      transition: background-color 0.3s ease;
-    }
-    
-    .button.is-dark:hover {
-      background-color: var(--secondary);
-    }
-    
-    .button.is-rounded {
-      border-radius: 0;
-    }
-    
-    .content h2 {
-      font-family: 'Roboto Mono', monospace;
-      color: var(--primary);
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .content h3 {
-      font-family: 'Roboto Mono', monospace;
-      color: var(--secondary);
-      margin-top: 2rem;
-    }
-    
-    .metric-card {
-      background-color: white;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--accent);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .metric-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent);
-      font-family: 'Roboto Mono', monospace;
-    }
-    
-    .metric-label {
-      font-size: 0.9rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    table th {
-      background-color: var(--dark);
-      color: white;
-      font-weight: 600;
-      text-align: left;
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-    }
-    
-    table td {
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-    }
-    
-    table tr:nth-child(even) {
-      background-color: #f8f9fa;
-    }
-    
-    table.metric-table td {
-      padding: 0.75rem;
-      border: none;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    
-    table.metric-table tr:last-child td {
-      border-bottom: none;
-    }
-    
-    table.metric-table td.has-text-right {
-      font-family: 'Roboto Mono', monospace;
-      font-weight: 600;
-      color: var(--accent);
-      font-size: 1.2rem;
-    }
-    
-    .hero-circuit-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-      opacity: 0.5;
-      z-index: 0;
-    }
-    
-    .carousel {
-      background-color: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      padding: 1rem;
-    }
-    
-    .footer {
-      background-color: var(--dark);
-      color: white;
-      padding: 3rem 1.5rem;
-    }
-    
-    .footer a {
-      color: var(--accent);
-    }
-    
-    .footer a:hover {
-      color: white;
-    }
-    
-    .section-divider {
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      margin: 2rem 0;
-      width: 100px;
-    }
-    
-    .publication-title {
-      position: relative;
-      display: inline-block;
-      margin-bottom: 1.5rem;
-    }
-    
-    .publication-title:after {
-      content: "";
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: var(--accent);
-    }
-    
-    .gear-icon {
-      position: absolute;
-      opacity: 0.1;
-      z-index: 0;
-    }
-    
-    /* Add responsive adjustments */
-    @media screen and (max-width: 768px) {
-      .section {
-        padding: 2rem 1rem;
-      }
-      
-      .title.is-1 {
-        font-size: 2.5rem;
-      }
-      
-      .metric-card {
-        margin-bottom: 1rem;
-      }
-    }
-    
-    /* Custom styling for the results carousel */
-    .results-carousel {
-      overflow: hidden;
-    }
-    
-    .results-carousel .item {
-      margin: 5px;
-      overflow: hidden;
-      padding: 20px;
-      font-size: 0;
-    }
-    
-    .results-carousel .item.is-active {
-      display: block;
-    }
-    
-    .results-carousel .item img {
-      max-height: 400px;
-      overflow: hidden;
-      margin: 0 auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Model comparisons section */
-    .model-comparison {
-      background-color: white;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--primary);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .model-name {
-      font-family: 'Roboto Mono', monospace;
-      font-weight: 600;
-      color: var(--primary);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Tang - Digital Ecosystem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/global.css">
+    <link rel="stylesheet" href="./styles/terminal.css">
+    <link rel="stylesheet" href="./styles/about.css">
+    <link rel="stylesheet" href="./styles/experience.css">
+    <link rel="stylesheet" href="./styles/projects.css">
+    <link rel="stylesheet" href="./styles/contact.css">
 </head>
 <body>
+    <!-- Custom Physics-Based Cursor System -->
+    <div id="cursor-container">
+        <div class="cursor-main"></div>
+        <div class="cursor-aura"></div>
+        <div class="cursor-interact"></div>
+        <!-- Cursor trails will be generated by JS -->
+    </div>
+    
+    <!-- Intro Sequence -->
+    <div class="intro-sequence" id="intro-sequence">
+        <pre class="intro-logo" id="intro-logo">
+ _____ ______   ___  ________  ___  ___  ________  _______   ___               _________  ________  ________   ________     
+|\   _ \  _   \|\  \|\   ____\|\  \|\  \|\   __  \|\  ___ \ |\  \             |\___   ___\\   __  \|\   ___  \|\   ____\    
+\ \  \\\__\ \  \ \  \ \  \___|\ \  \\\  \ \  \|\  \ \   __/|\ \  \            \|___ \  \_\ \  \|\  \ \  \\ \  \ \  \___|    
+ \ \  \\|__| \  \ \  \ \  \    \ \   __  \ \   __  \ \  \_|/_\ \  \                \ \  \ \ \   __  \ \  \\ \  \ \  \  ___  
+  \ \  \    \ \  \ \  \ \  \____\ \  \ \  \ \  \ \  \ \  \_|\ \ \  \____            \ \  \ \ \  \ \  \ \  \\ \  \ \  \|\  \ 
+   \ \__\    \ \__\ \__\ \_______\ \__\ \__\ \__\ \__\ \_______\ \_______\           \ \__\ \ \__\ \__\ \__\\ \__\ \_______\
+    \|__|     \|__|\|__|\|_______|\|__|\|__|\|__|\|__|\|_______|\|_______|            \|__|  \|__|\|__|\|__| \|__|\|_______|
 
-  <section class="hero is-primary is-medium">
-    <div class="hero-circuit-bg"></div>
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">ML STOCK PREDICTOR</h1>
-            <div class="is-size-5 publication-authors">
-              <span class="author-block">
-                <h1>Rishi Patel, Baturalp Unlu, Dhruv Chaudhari, Michael Tang, Adrian Kalisz</h1>
-              </span>
+        </pre>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="ecosystem-container">
+        <!-- Particle Field Navigation -->
+        <div class="particle-field" id="particle-field">
+            <!-- Particles will be generated by JS -->
+        </div>
+        
+        <!-- Terminal Core Interface -->
+        <div class="terminal-interface" id="terminal-interface">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <div class="terminal-button terminal-button-close" id="terminal-close"></div>
+                    <div class="terminal-button terminal-button-minimize" id="terminal-minimize"></div>
+                    <div class="terminal-button terminal-button-maximize" id="terminal-maximize"></div>
+                </div>
+                <div class="terminal-title">mtang@digital-ecosystem ~ $</div>
             </div>
-            <span class="author-block">Georgia Institute of Technology<br></span>
-            <span class="eql-cntrb"><small><br><sup></sup></small></span>
+            <div class="terminal-content" id="terminal-content">
+                <div class="terminal-line visible">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-command">echo "Welcome to Michael Tang's Digital Ecosystem"</span>
+                </div>
+                <div class="terminal-line visible">
+                    Welcome to Michael Tang's Digital Ecosystem
+                </div>
+                <div class="terminal-line visible">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-command">whoami</span>
+                </div>
+                <div class="terminal-line visible">
+                    Michael Tang - AI and Software Engineer specializing in machine learning, NLP, and financial data analysis.
+                </div>
+                <div class="terminal-line visible">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-command">cat navigation.txt</span>
+                </div>
+                <div class="terminal-line visible">
+                    <pre>
+Navigation Commands: 
+• view about - Display information about Michael Tang
+• view experience - Show professional background
+• view projects - Browse portfolio projects
+• view contact - Get contact information
+• clear - Clear the terminal
+• help - Display more command info
+                    </pre>
+                </div>
+                
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">$</span>
+                    <input type="text" class="terminal-input" id="terminal-input" placeholder="Type a command...">
+                    <span class="terminal-cursor"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Nodes -->
+        <div class="nav-nodes">
+            <div class="nav-node active" data-section="intro"></div>
+            <div class="nav-node" data-section="about"></div>
+            <div class="nav-node" data-section="experience"></div>
+            <div class="nav-node" data-section="projects"></div>
+            <div class="nav-node" data-section="contact"></div>
+        </div>
+        
+        <!-- Sections -->
+        <div class="section" id="about-section">
+            <div class="about-container">
+                <div class="about-header">
+                    <h1 class="about-title interactive-text">MICHAEL_TANG</h1>
+                    <p class="about-subtitle">AI & Software Engineer</p>
+                </div>
+                
+                <p class="about-text">
+                    An aspiring <span class="highlight">AI engineer</span> with hands-on experience in machine learning, NLP, and financial data analysis. Strong technical background in <span class="highlight">LLM fine-tuning</span>, reinforcement learning, and back-end development, with a focus on scalable and data-driven solutions.
+                </p>
+                
+                <!-- Living Data Visualization -->
+                <div class="data-visualization" id="skills-visualization">
+                    <!-- Data points will be generated by JS -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="experience-section">
+            <div class="experience-container">
+                <div class="experience-header">
+                    <h1 class="about-title interactive-text">EXPERIENCE</h1>
+                    <p class="about-subtitle">Professional Journey</p>
+                </div>
+                
+                <div class="experience-items">
+                    <div class="experience-item">
+                        <div class="experience-date">Dec 2024 - Present</div>
+                        <h3 class="experience-title">Staff Accountant</h3>
+                        <div class="experience-company">WellBorn Management</div>
+                        <p class="experience-description">
+                            Administered general ledger activities, prepared financial statements, and reconciled accounts for 10+ hospitality brands. Supervised accounts payable/receivable, payroll processing, revenue reporting, and bank reconciliations to ensure financial integrity for over $11 million in annual revenue.
+                        </p>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="experience-date">Aug 2024 - Present</div>
+                        <h3 class="experience-title">Freelance Writer</h3>
+                        <div class="experience-company">Grammarly</div>
+                        <p class="experience-description">
+                            Evaluated 1,400+ text documents and snippets as part of an internal initiative designed to improve the quality, accuracy, and contextual relevance of AI-powered writing suggestions. Supported feature development by refining existing algorithms and evaluating prototypes.
+                        </p>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="experience-date">Apr 2024 - Dec 2024</div>
+                        <h3 class="experience-title">Contract AI Writing Evaluator</h3>
+                        <div class="experience-company">Outlier</div>
+                        <p class="experience-description">
+                            Evaluated and refined training data for LLMs including Google Gemini, by analyzing 2,000+ AI-generated outputs across domains such as Google Flights, Hotels, and YouTube. Applied Reinforcement Learning from Human Feedback (RLHF) to optimize AI accuracy, ensuring ethical and factual responses.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="projects-section">
+            <div class="about-container">
+                <div class="about-header">
+                    <h1 class="about-title interactive-text">PROJECTS</h1>
+                    <p class="about-subtitle">Creative Works</p>
+                </div>
+                
+                <div class="project-cards">
+                    <div class="project-card interactive-element">
+                        <h3 class="project-title">Stock Price Prediction Model</h3>
+                        <div class="project-tech">Python, Ridge Regression, CNN, SVR</div>
+                        <p class="project-description">
+                            Engineered a stock price forecasting model that achieved an R² score of 0.984, leveraging Ridge Regression, CNN, and SVR to enhance predictive accuracy. Designed data preprocessing techniques and integrated visualization tools.
+                        </p>
+                        <div class="project-metric">
+                            <div class="metric-label">Accuracy</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 98.4%"></div>
+                            </div>
+                            <div class="metric-value">98.4%</div>
+                        </div>
+                        <a href="projects\ML4641\index.html" target="_blank" class="project-button" data-cursor="hover">View Project</a>
+                    </div>
+                    
+                    <div class="project-card interactive-element">
+                        <h3 class="project-title">NLP Headline Classification Model</h3>
+                        <div class="project-tech">PyTorch, NLTK, Pandas</div>
+                        <p class="project-description">
+                            Built an NLP classifier that distinguishes satirical from real news headlines using a Neural Bag of Words model. Implemented custom PyTorch datasets, token embeddings, and achieved 86%+ F1 score by capturing distinctive linguistic patterns in satirical writing.                        </p>
+                        <div class="project-metric">
+                            <div class="metric-label">F1 Score</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 86.5%"></div>
+                            </div>
+                            <div class="metric-value">86.5%</div>
+                        </div>
+                        <a class="project-button" data-cursor="hover">N/A</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="contact-section">
+            <div class="about-container">
+                <div class="about-header">
+                    <h1 class="about-title interactive-text">CONTACT</h1>
+                    <p class="about-subtitle">Get in Touch</p>
+                </div>
+                
+                <div class="contact-content">
+                    <p class="about-text">
+                        Interested in collaborating on AI projects or need a skilled developer for your team? Feel free to reach out through any of the channels below.
+                    </p>
+                    
+                    <div class="contact-cards">
+                        <div class="contact-card interactive-element">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value">mta&#110;g2&#48;21&#64;&#103;m&#97;i&#108;&#46;&#99;om</div>
+                        </div>
+                        
+                        <div class="contact-card interactive-element">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-label">Phone</div>
+                            <div class="contact-value">+1 404-834-0526</div>
+                        </div>
+                        
+                        <div class="contact-card interactive-element">
+                            <div class="contact-icon">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <div class="contact-label">LinkedIn</div>
+                            <div class="contact-value">mtang2021</div>
+                        </div>
+                        
+                        <div class="contact-card interactive-element">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-label">Location</div>
+                            <div class="contact-value">Morrow, Georgia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show intro sequence
+            const introSequence = document.getElementById('intro-sequence');
+            const introLogo = document.getElementById('intro-logo');
             
-            <div class="publication-links mt-4">
-              <span class="link-block">
-                <a href="https://github.com/mtang2021/ml-stock-predictor-fall2024" target="_blank"
-                class="external-link button is-normal is-rounded is-dark">
-                <span class="icon">
-                  <i class="fab fa-github"></i>
-                </span>
-                <span>GitHub Repo</span>
-              </a>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Introduction and Background -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">INTRODUCTION & BACKGROUND</h2>
-        <div class="section-divider"></div>
-        <div class="content">
-          <p>
-            The stock market reflects a country's economic health and provides valuable insights into its future. While it's impossible to predict a stock's exact movement with absolute certainty, we can reduce risk and forecast potential stock movements by analyzing key indicators such as market sentiment, GDP, and earnings reports.
-          </p>
-          <p>
-            Due to the time-consuming process of analyzing data, algorithmic trading has emerged as an effective measure to analyze the market more safely and efficiently. For this project, We will use FRED economic data, which contains U.S. macroeconomic data, Yahoo Finance, which contains useful APIs for daily market coverage, and FINRA's datasets to develop a profitable investing strategy that helps us predict the direction of the stock market.
-          </p>
-          
-          <div class="columns mt-5">
-            <div class="column">
-              <div class="box has-text-centered">
-                <span class="icon is-large has-text-info">
-                  <i class="fas fa-chart-line fa-2x"></i>
-                </span>
-                <p class="is-size-5 mt-3"><a href="https://finance.yahoo.com/markets/" target="_blank">Yahoo Finance</a></p>
-                <p class="is-size-7">Stock Market Dataset</p>
-              </div>
-            </div>
-            <div class="column">
-              <div class="box has-text-centered">
-                <span class="icon is-large has-text-danger">
-                  <i class="fas fa-database fa-2x"></i>
-                </span>
-                <p class="is-size-5 mt-3"><a href="https://fred.stlouisfed.org/" target="_blank">FRED Dataset</a></p>
-                <p class="is-size-7">Economic Data</p>
-              </div>
-            </div>
-            <div class="column">
-              <div class="box has-text-centered">
-                <span class="icon is-large has-text-success">
-                  <i class="fas fa-file-alt fa-2x"></i>
-                </span>
-                <p class="is-size-5 mt-3"><a href="https://data.sec.gov/" target="_blank">SEC Data</a></p>
-                <p class="is-size-7">Financial Reporting</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Problem Definition -->
-<section class="section is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">PROBLEM DEFINITION</h2>
-        <div class="section-divider"></div>
-        <div class="content">
-          <p>
-            Predicting the direction of a stock is challenging due to its volatility. Analyzing data from various key indicators for a stock is also time-consuming. To streamline this process and improve market predictions, we will use machine learning models to forecast stock trends and maximize profit. By leveraging historical data and advanced algorithms, these models can identify patterns that may be difficult for humans to detect manually.
-          </p>
-          
-          <div class="columns mt-5 is-centered">
-            <div class="column is-10">
-              <div class="box" style="background-color: #f8f9fa; border-left: 4px solid var(--accent);">
-                <div class="content">
-                  <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace;">Core Challenges</h4>
-                  <ul>
-                    <li><strong>High Volatility:</strong> Stock prices experience rapid fluctuations influenced by numerous factors</li>
-                    <li><strong>Complex Patterns:</strong> Market behavior involves intricate patterns that require sophisticated analysis</li>
-                    <li><strong>Time-Intensive Analysis:</strong> Manual examination of indicators is prohibitively time-consuming</li>
-                    <li><strong>Data Volume:</strong> Processing vast amounts of historical and real-time data efficiently</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Methods -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">METHODS</h2>
-        <div class="section-divider"></div>
-        <div class="content">
-          <h3>Data Preparation</h3>
-          <p>We anticipated data imperfections and addressed them using these techniques:</p>
-          
-          <div class="columns">
-            <div class="column">
-              <div class="box" style="height: 100%; border-top: 3px solid var(--accent);">
-                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace;">Missing Data Handling</h4>
-                <p>For columns with missing data, we used K-Nearest Neighbors (KNN) to analyze how similar data behaves and substitute the missing values accordingly.</p>
-              </div>
-            </div>
-            <div class="column">
-              <div class="box" style="height: 100%; border-top: 3px solid var(--primary);">
-                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace;">Dimensionality Reduction</h4>
-                <p>To reduce features and simplify the model, we applied Principal Component Analysis (PCA), allowing us to drop features while retaining most of the variance [1].</p>
-              </div>
-            </div>
-            <div class="column">
-              <div class="box" style="height: 100%; border-top: 3px solid var(--highlight);">
-                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace;">Outlier Removal</h4>
-                <p>We removed outliers to prevent model skew from unrepresentative data, focusing on data points falling outside 2x the interquartile range (IQR).</p>
-              </div>
-            </div>
-          </div>
-          
-          <h3 class="mt-6">Model Implementations</h3>
-          
-          <div class="model-comparison">
-            <h4 class="model-name">Support Vector Regression (SVR)</h4>
-            <p>
-              Initially planned as SVM for classification, we evolved to SVR for continuous price predictions. SVR builds upon SVM by adapting its principles to regression tasks, allowing precise outcome predictions instead of categorical classifications. The model was implemented to handle the high-dimensional nature of stock market data, achieving up to 98% accuracy when applied to historical Apple stock data. SVR's exceptional performance reflects its ability to handle high-dimensional data and identify non-linear relationships.
-            </p>
-          </div>
-          
-          <div class="model-comparison">
-            <h4 class="model-name">Convolutional Neural Network (CNN)</h4>
-            <p>
-              Traditionally used for image recognition, CNN was adapted for stock market prediction by treating historical stock data as a two-dimensional representation. This allowed the model to identify non-linear relationships in the data and enhance prediction accuracy. CNNs are uniquely suited for capturing complex patterns that may not be apparent with traditional methods. Our implemented CNN model consists of 1D convolution followed by two Dense layers, which proved sufficient for this task.
-            </p>
-          </div>
-          
-          <div class="model-comparison">
-            <h4 class="model-name">Ridge Regression</h4>
-            <p>
-              We implemented Ridge Regression using historical stock data from Yahoo Finance. This model establishes a linear relationship between input features and expected future prices, with regularization to penalize large coefficients and reduce overfitting. We enhanced the model by expanding data dimensionality (raising features to different powers up to x⁴) and standardizing these expanded features to maintain regularization significance. Missing data was handled with linear interpolation, using the two closest points to estimate missing values.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Quantitative Metrics -->
-<section class="section is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">QUANTITATIVE METRICS</h2>
-        <div class="section-divider"></div>
-        <div class="content">
-          <p>
-            The following statistics are for stock ticker $TSLA, using the highest achieved average R<sup>2</sup> score.
-          </p>
-          
-          <div class="columns mt-4 is-centered">
-            <div class="column is-10">
-              <div class="columns">
-                <div class="column">
-                  <div class="box" style="border-top: 5px solid #3498db; height: 100%;">
-                    <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace; margin-bottom: 1.5rem;">SVR</h4>
-                    <table class="table is-fullwidth metric-table">
-                      <tbody>
-                        <tr>
-                          <td class="has-text-weight-bold">MSE</td>
-                          <td class="has-text-right">65.50</td>
-                        </tr>
-                        <tr>
-                          <td class="has-text-weight-bold">MAE</td>
-                          <td class="has-text-right">4.85</td>
-                        </tr>
-                        <tr>
-                          <td class="has-text-weight-bold">R² Score</td>
-                          <td class="has-text-right">0.984</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+            // Play intro animation
+            setTimeout(() => {
+                introLogo.classList.add('visible');
+            }, 500);
+            
+            setTimeout(() => {
+                introLogo.classList.remove('visible');
+                introSequence.style.opacity = '0';
+                setTimeout(() => {
+                    introSequence.style.display = 'none';
+                    initializeApp();
+                }, 1000);
+            }, 3000);
+        });
+        
+        function initializeApp() {
+            // Initialize terminal interface
+            const terminal = document.getElementById('terminal-interface');
+            terminal.style.opacity = '1';
+            
+            // Setup physics-based cursor
+            setupCursor();
+            
+            // Generate particle field
+            generateParticleField();
+            
+            // Initialize terminal functionality
+            initializeTerminal();
+            
+            // Setup interactive text
+            setupInteractiveText();
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Generate living data visualization
+            generateSkillsVisualization();
+            
+            // Make project cards and contact cards interactive
+            setupInteractiveElements();
+        }
+        
+        // Physics-based cursor with trails
+        function setupCursor() {
+            const cursorContainer = document.getElementById('cursor-container');
+            const cursorMain = document.querySelector('.cursor-main');
+            const cursorAura = document.querySelector('.cursor-aura');
+            const cursorInteract = document.querySelector('.cursor-interact');
+            
+            // Trail properties
+            const maxTrails = 0;
+            const trails = [];
+            
+            // Create cursor trails
+            for (let i = 0; i < maxTrails; i++) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.opacity = '0';
+                cursorContainer.appendChild(trail);
+                trails.push({
+                    element: trail,
+                    x: 0,
+                    y: 0,
+                    // Randomize the delay for more organic movement
+                    delay: i * (100 / maxTrails),
+                    size: Math.max(2, 6 - (i * 0.25)) // Gradually smaller trails
+                });
+            }
+            
+            // Track cursor position
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
                 
-                <div class="column">
-                  <div class="box" style="border-top: 5px solid #9b59b6; height: 100%;">
-                    <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace; margin-bottom: 1.5rem;">CNN</h4>
-                    <table class="table is-fullwidth metric-table">
-                      <tbody>
-                        <tr>
-                          <td class="has-text-weight-bold">MSE</td>
-                          <td class="has-text-right">571.69</td>
-                        </tr>
-                        <tr>
-                          <td class="has-text-weight-bold">MAE</td>
-                          <td class="has-text-right">11.63</td>
-                        </tr>
-                        <tr>
-                          <td class="has-text-weight-bold">R² Score</td>
-                          <td class="has-text-right">0.948</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                // Update cursor scale based on movement speed
+                const dx = e.movementX;
+                const dy = e.movementY;
+                const speed = Math.sqrt(dx*dx + dy*dy);
+                const scale = 1 + Math.min(speed / 20, 0.5);
+                cursorMain.style.transform = `translate(-50%, -50%) scale(${scale})`;
                 
-                <div class="column">
-                  <div class="box" style="border-top: 5px solid #e74c3c; height: 100%;">
-                    <h4 class="has-text-centered is-size-4" style="font-family: 'Roboto Mono', monospace; margin-bottom: 1.5rem;">RIDGE</h4>
-                    <table class="table is-fullwidth metric-table">
-                      <tbody>
-                        <tr>
-                          <td class="has-text-weight-bold">MSE</td>
-                          <td class="has-text-right">2818.54</td>
-                        </tr>
-                        <tr>
-                          <td class="has-text-weight-bold">MAE</td>
-                          <td class="has-text-right">39.25</td>
-                        </tr>
-                        <tr>
-                          <td class="has-text-weight-bold">R² Score</td>
-                          <td class="has-text-right">0.730</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Analysis and Comparison -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">ANALYSIS & COMPARISON</h2>
-        <div class="section-divider"></div>
-        <div class="content">
-          <div class="columns">
-            <div class="column">
-              <div class="box" style="border-left: 4px solid #3498db;">
-                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace; color: #3498db;">SVR Performance</h4>
-                <p>
-                  The SVR model explained 98.4% of the variance (R² = 0.984) in the stock price data. The relatively low MSE and MAE indicate predictions close to actual values. This impressive performance highlights SVR's capacity to handle the high-dimensional nature of stock data and identify non-linear relationships.
-                </p>
-              </div>
-            </div>
-            <div class="column">
-              <div class="box" style="border-left: 4px solid #9b59b6;">
-                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace; color: #9b59b6;">CNN Performance</h4>
-                <p>
-                  While CNN's R² score (0.948) is slightly lower than SVR, the model still performs remarkably well. The higher MSE and MAE suggest slightly less accuracy than SVR, but the model effectively captures complex patterns in the data without specialized time-series preprocessing.
-                </p>
-              </div>
-            </div>
-            <div class="column">
-              <div class="box" style="border-left: 4px solid #e74c3c;">
-                <h4 class="is-size-5" style="font-family: 'Roboto Mono', monospace; color: #e74c3c;">Ridge Performance</h4>
-                <p>
-                  Ridge Regression struggles comparatively with a lower R² score (0.730) and higher error metrics. This is expected as Ridge is a linear model attempting to model inherently non-linear stock price movements, though it still provides a useful baseline for comparison.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <h3 class="mt-5">Next Steps</h3>
-          <div class="box" style="background-color: #f8f9fa;">
-            <div class="content">
-              <ul>
-                <li><strong>Data Preprocessing Refinement:</strong> Normalize features and consider using returns/log-returns instead of raw prices</li>
-                <li><strong>SVR Optimization:</strong> Fine-tune kernel selection and regularization parameters</li>
-                <li><strong>CNN Enhancement:</strong> Implement hybrid CNN-LSTM models for better time-series analysis</li>
-                <li><strong>Feature Engineering:</strong> Include temporal features like moving averages and Fourier-transformed components</li>
-                <li><strong>Model Ensemble:</strong> Combine predictions from multiple models for improved robustness</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Visualizations Section -->
-<section class="section is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">VISUALIZATIONS</h2>
-        <div class="section-divider"></div>
+                // Check if cursor is over interactive elements
+                const element = document.elementFromPoint(e.clientX, e.clientY);
+                if (element && element.closest('[data-cursor="hover"]') || 
+                    element && element.tagName === 'A' || 
+                    element && element.tagName === 'BUTTON') {
+                    cursorMain.style.borderColor = 'var(--highlight)';
+                    cursorMain.style.transform = `translate(-50%, -50%) scale(1.5)`;
+                } else {
+                    cursorMain.style.borderColor = 'var(--text-color)';
+                }
+                
+                // Physical interaction with nearby elements
+                const interactiveElements = document.querySelectorAll('.interactive-text, .nav-node, .terminal-button, .particle');
+                interactiveElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const elCenterX = rect.left + rect.width / 2;
+                    const elCenterY = rect.top + rect.height / 2;
+                    
+                    // Calculate distance
+                    const dx = mouseX - elCenterX;
+                    const dy = mouseY - elCenterY;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    // Apply physics effects based on distance
+                    if (distance < 100) {
+                        // Calculate repulsion force (inverse to distance)
+                        const force = Math.min(1 - distance / 100, 0.4);
+                        const angle = Math.atan2(dy, dx);
+                        const moveX = Math.cos(angle) * force * 5;
+                        const moveY = Math.sin(angle) * force * 5;
+                        
+                        // Apply transformation
+                        if (el.classList.contains('interactive-text')) {
+                            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                        } else if (el.classList.contains('particle')) {
+                            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                            el.style.backgroundColor = 'var(--highlight)';
+                        } else {
+                            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                        }
+                    } else {
+                        // Reset when cursor is far away
+                        if (!el.classList.contains('char-wrapper')) {
+                            el.style.transform = '';
+                        }
+                        if (el.classList.contains('particle')) {
+                            el.style.backgroundColor = 'var(--highlight-dim)';
+                        }
+                    }
+                });
+            });
+            
+            // Animation loop for cursor and trails
+            function animateCursor() {
+                // Smoothly move cursor to mouse position (easing effect)
+                cursorX += (mouseX - cursorX) * 0.1;
+                cursorY += (mouseY - cursorY) * 0.1;
+                
+                // Update main cursor position
+                cursorMain.style.left = `${cursorX}px`;
+                cursorMain.style.top = `${cursorY}px`;
+                
+                // Update cursor aura
+                cursorAura.style.left = `${cursorX}px`;
+                cursorAura.style.top = `${cursorY}px`;
+                
+                // Update cursor interact area
+                cursorInteract.style.left = `${cursorX}px`;
+                cursorInteract.style.top = `${cursorY}px`;
+                
+                // Update trails with staggered delay
+                trails.forEach((trail, index) => {
+                    // Calculate trail position with delay
+                    trail.x += (mouseX - trail.x) * (0.1 - index * 0.005);
+                    trail.y += (mouseY - trail.y) * (0.1 - index * 0.005);
+                    
+                    // Apply position
+                    trail.element.style.left = `${trail.x}px`;
+                    trail.element.style.top = `${trail.y}px`;
+                    
+                    // Set size
+                    trail.element.style.width = `${trail.size}px`;
+                    trail.element.style.height = `${trail.size}px`;
+                    
+                    // Fade in trails gradually
+                    if (trail.element.style.opacity < 0.7) {
+                        trail.element.style.opacity = Math.min(parseFloat(trail.element.style.opacity) + 0.05, 0.7 - (index * 0.03));
+                    }
+                });
+                
+                requestAnimationFrame(animateCursor);
+            }
+            
+            // Start animation loop
+            animateCursor();
+        }
         
-        <h3 class="title is-4 mt-5">Ridge Regression Results</h3>
-        <div class="hero is-small">
-          <div class="hero-body">
-            <div class="container">
-              <div id="results-carousel" class="carousel results-carousel">
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/Tesla_1_dim.png" alt="Tesla 1 dimension prediction"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Stock price prediction for Tesla with 1 dimension.
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/Tesla_7_dim.png" alt="Tesla 7 dimensions prediction"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Stock price prediction for Tesla with 7 dimensions.
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/Tesla_best.png" alt="Tesla best model"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Best performing model for Tesla with 7 dimensions (R² score: 0.72).
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/Amazon_best.png" alt="Amazon best model"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Best performing model for Amazon with 8 dimensions (R² score: 0.89).
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        // Generate particle field for navigation
+        function generateParticleField() {
+            const particleField = document.getElementById('particle-field');
+            const particleCount = Math.min(window.innerWidth / 10, 150); // Responsive particle count
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Position randomly
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                // Animate particle with random duration
+                const duration = 20 + Math.random() * 20;
+                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                
+                particleField.appendChild(particle);
+            }
+            
+            // Make particles move slightly on scroll
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const particles = document.querySelectorAll('.particle');
+                
+                particles.forEach((particle, index) => {
+                    // Create parallax effect with different speeds
+                    const speed = 0.05 + (index % 5) * 0.01;
+                    particle.style.transform = `translateY(${scrollY * speed}px)`;
+                });
+            });
+        }
         
-        <h3 class="title is-4 mt-5">CNN Results</h3>
-        <div class="hero is-small">
-          <div class="hero-body">
-            <div class="container">
-              <div id="results-carousel" class="carousel results-carousel">
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/AAPL_CNN.png" alt="Apple CNN prediction"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Stock price prediction for Apple using CNN.
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/CNN_metrics.png" alt="CNN metrics"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Quantitative metrics for CNN model performance.
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/TSLA_CNN.png" alt="Tesla CNN prediction"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Stock price prediction for Tesla using CNN.
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        // Initialize terminal functionality
+        function initializeTerminal() {
+            const terminalContent = document.getElementById('terminal-content');
+            const terminalInput = document.getElementById('terminal-input');
+            const terminalClose = document.getElementById('terminal-close');
+            const terminalMinimize = document.getElementById('terminal-minimize');
+            const terminalMaximize = document.getElementById('terminal-maximize');
+            
+            // Terminal state
+            let isMinimized = false;
+            const terminalInterface = document.getElementById('terminal-interface');
+            
+            // Terminal commands
+            const commands = {
+                'help': () => {
+                    addTerminalLine('Available commands:', false);
+                    addTerminalLine('• view [section] - View a section (about, experience, projects, skills, contact)', false);
+                    addTerminalLine('• clear - Clear the terminal', false);
+                    addTerminalLine('• exit - Minimize the terminal', false);
+                    addTerminalLine('• help - Display this help message', false);
+                },
+                'clear': () => {
+                    // Remove all lines except the input line
+                    const lines = terminalContent.querySelectorAll('.terminal-line');
+                    lines.forEach(line => {
+                        if (!line.classList.contains('terminal-input-line')) {
+                            line.remove();
+                        }
+                    });
+                },
+                'exit': () => {
+                    minimizeTerminal();
+                },
+                'view': (section) => {
+                    if (!section) {
+                        addTerminalLine('Please specify a section to view: about, experience, projects, skills, contact', false);
+                        return;
+                    }
+                    
+                    // Find the nav node for this section
+                    const navNodes = document.querySelectorAll('.nav-node');
+                    let foundSection = false;
+                    
+                    navNodes.forEach(node => {
+                        if (node.dataset.section === section) {
+                            node.click();
+                            foundSection = true;
+                        }
+                    });
+                    
+                    if (!foundSection) {
+                        // Try to match sections more loosely
+                        if (section === 'projects' || section === 'project') {
+                            navNodes.forEach(node => {
+                                if (node.dataset.section === 'projects') {
+                                    node.click();
+                                    foundSection = true;
+                                }
+                            });
+                        } else if (section === 'contact' || section === 'contacts') {
+                            navNodes.forEach(node => {
+                                if (node.dataset.section === 'contact') {
+                                    node.click();
+                                    foundSection = true;
+                                }
+                            });
+                        }
+                    }
+                    
+                    if (foundSection) {
+                        addTerminalLine(`Navigating to ${section} section...`, false);
+                        
+                        // If terminal is maximized, minimize it
+                        setTimeout(() => {
+                            minimizeTerminal();
+                        }, 1000);
+                    } else {
+                        addTerminalLine(`Section "${section}" not found. Available sections: about, experience, projects, contact`, false);
+                    }
+                }
+            };
+            
+            // Add a new line to terminal
+            function addTerminalLine(text, isCommand = true, delay = 0) {
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                
+                if (isCommand) {
+                    line.innerHTML = `<span class="terminal-prompt">$</span> <span class="terminal-command">${text}</span>`;
+                } else {
+                    line.textContent = text;
+                }
+                
+                terminalContent.insertBefore(line, terminalContent.lastElementChild);
+                
+                // Animate line appearance
+                setTimeout(() => {
+                    line.classList.add('visible');
+                }, delay);
+                
+                // Scroll to bottom
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+                
+                return line;
+            }
+            
+            // Process terminal input
+            terminalInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const input = terminalInput.value.trim();
+                    terminalInput.value = '';
+                    
+                    if (input) {
+                        // Add command to terminal
+                        addTerminalLine(input, true);
+                        
+                        // Process command
+                        const args = input.split(' ');
+                        const command = args[0].toLowerCase();
+                        const commandArgs = args.slice(1);
+                        
+                        if (commands[command]) {
+                            commands[command](...commandArgs);
+                        } else {
+                            addTerminalLine(`Command not found: ${command}. Type 'help' for available commands.`, false);
+                        }
+                    }
+                }
+            });
+            
+            // Terminal controls
+            terminalClose.addEventListener('click', () => {
+                terminalInterface.style.opacity = '0';
+                setTimeout(() => {
+                    terminalInterface.style.display = 'none';
+                }, 700);
+            });
+            
+            function minimizeTerminal() {
+                if (!isMinimized) {
+                    terminalInterface.style.transform = 'translate(-50%, 40vh) scale(0.2)';
+                    terminalInterface.style.opacity = '0.7';
+                    isMinimized = true;
+                }
+            }
+            
+            function maximizeTerminal() {
+                if (isMinimized) {
+                    terminalInterface.style.transform = 'translate(-50%, -50%) scale(1)';
+                    terminalInterface.style.opacity = '1';
+                    isMinimized = false;
+                    
+                    // Focus input
+                    setTimeout(() => {
+                        terminalInput.focus();
+                    }, 700);
+                }
+            }
+            
+            terminalMinimize.addEventListener('click', minimizeTerminal);
+            terminalMaximize.addEventListener('click', maximizeTerminal);
+            
+            // Double click on terminal header to toggle minimize/maximize
+            document.querySelector('.terminal-header').addEventListener('dblclick', (e) => {
+                if (e.target.closest('.terminal-button')) return;
+                
+                if (isMinimized) {
+                    maximizeTerminal();
+                } else {
+                    minimizeTerminal();
+                }
+            });
+            
+            // Click on minimized terminal to maximize
+            terminalInterface.addEventListener('click', () => {
+                if (isMinimized) {
+                    maximizeTerminal();
+                }
+            });
+            
+            // Focus terminal input on load
+            setTimeout(() => {
+                terminalInput.focus();
+            }, 1000);
+        }
         
-        <h3 class="title is-4 mt-5">SVR Results</h3>
-        <div class="hero is-small">
-          <div class="hero-body">
-            <div class="container">
-              <div id="results-carousel" class="carousel results-carousel">
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/AAPL_SVR.png" alt="Apple SVR prediction"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Stock price prediction for Apple using SVR.
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/SVR_metrics2.png" alt="SVR metrics"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Quantitative metrics for SVR model on Apple.
-                  </h2>
-                </div>
-                <div class="item">
-                  <div style="text-align: center;">
-                    <img src="static/images/TSLA_SVR.png" alt="Tesla SVR prediction"/>
-                  </div>
-                  <h2 class="subtitle has-text-centered">
-                    Stock price prediction for Tesla using SVR.
-                  </h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- References -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">REFERENCES</h2>
-        <div class="section-divider"></div>
-        <div class="content" style="text-indent: -36px; padding-left: 36px;">
-          <p>	
-            [1] M. Ghorbani and E. K. P. Chong, "Stock price prediction using principal components," PLoS ONE, vol. 15, no. 3, p. e0230124, 2020, doi: 10.1371/journal.pone.0230124.
-          </p>
-          <p>
-            [2] S. Madge and S. Bhatt, "Predicting stock price direction using support vector machines," 2015.
-          </p>
-          <p>
-            [3] S. Chen and H. He, "Stock Prediction Using Convolutional Neural Network," IOP Conf. Ser.: Mater. Sci. Eng. 435 012026, 2018, doi: 10.1088/1757-899X/435/1/012026
-          </p>
-          <p>
-            [4] T. Rishi, "Stock market analysis using linear regression," Proceedings of the Jepson Undergraduate Conference on International Economics, vol. 4, article 4, 2022. Available at: https://scholarworks.uni.edu/jucie/vol4/iss1/4.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Gantt Chart -->
-<section class="section is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">PROJECT TIMELINE</h2>
-        <div class="section-divider"></div>
-        <div class="box">
-          <iframe src="static/pdfs/Gantt.pdf" width="100%" height="550" style="border: none;"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Contribution Table -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">TEAM CONTRIBUTIONS</h2>
-        <div class="section-divider"></div>
-        <div class="content">
-          <table class="table is-fullwidth">
-            <thead>
-              <tr>
-                <th style="color: white">Team Member</th>
-                <th style="color: white">Final Report Contributions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Rishi Patel</strong></td>
-                <td>SVR Implementation, Presentation, Gantt Chart</td>
-              </tr>
-              <tr>
-                <td><strong>Baturalp Unlu</strong></td>
-                <td>SVR Implementation, CNN Implementation</td>
-              </tr>
-              <tr>
-                <td><strong>Dhruv Chaudhari</strong></td>
-                <td>Methods Write-up, Presentation, Presentation Video</td>
-              </tr>
-              <tr>
-                <td><strong>Michael Tang</strong></td>
-                <td>CNN Implementation, Quantitative Metrics, Analysis & Comparison, Next Steps, Visualization, GitHub Pages & Repo Deployment</td>
-              </tr>
-              <tr>
-                <td><strong>Adrian Kalisz</strong></td>
-                <td>SVR Implementation, CNN Implementation, Methods Write-up</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content has-text-centered">
-          <p>
-            © Michael Tang, 2025. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<!-- Scripts for carousel functionality -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all carousels
-    var carousels = bulmaCarousel.attach('.carousel', {
-      slidesToScroll: 1,
-      slidesToShow: 1,
-      infinite: true,
-      autoplay: false
-    });
-
-    // Add .is-active to the current slide
-    carousels.forEach(carousel => {
-      carousel.on('before:show', state => {
-        const items = carousel.element.querySelectorAll('.item');
-        items.forEach(item => item.classList.add('is-active'));
-        items[state.index].classList.add('is-active');
-      });
-    });
-  });
-</script>
-
+        // Setup interactive text
+        function setupInteractiveText() {
+            const interactiveTextElements = document.querySelectorAll('.interactive-text');
+            
+            interactiveTextElements.forEach(element => {
+                const text = element.textContent;
+                element.textContent = '';
+                
+                // Create dynamic shape for this text element
+                const dynamicShape = document.createElement('div');
+                dynamicShape.className = 'dynamic-shape';
+                element.appendChild(dynamicShape);
+                
+                // Split text into characters
+                for (let i = 0; i < text.length; i++) {
+                    const charWrapper = document.createElement('span');
+                    charWrapper.className = 'char-wrapper';
+                    charWrapper.textContent = text[i];
+                    
+                    // Set initial random position
+                    charWrapper.style.transform = `translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px)`;
+                    charWrapper.style.opacity = '0';
+                    
+                    element.appendChild(charWrapper);
+                    
+                    // Animate character into position
+                    setTimeout(() => {
+                        charWrapper.style.transform = 'translate(0, 0)';
+                        charWrapper.style.opacity = '1';
+                    }, 500 + i * 10);
+                }
+                
+                // Track mouse position for this text element
+                element.addEventListener('mousemove', (e) => {
+                    const rect = element.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Position the dynamic shape
+                    dynamicShape.style.left = x + 'px';
+                    dynamicShape.style.top = y + 'px';
+                    dynamicShape.style.opacity = '1';
+                    
+                    // Affect characters based on proximity
+                    const charWrappers = element.querySelectorAll('.char-wrapper');
+                    charWrappers.forEach((charWrapper, index) => {
+                        const charRect = charWrapper.getBoundingClientRect();
+                        const charX = charRect.left + charRect.width / 2 - rect.left;
+                        const charY = charRect.top + charRect.height / 2 - rect.top;
+                        
+                        // Calculate distance
+                        const dx = x - charX;
+                        const dy = y - charY;
+                        const distance = Math.sqrt(dx*dx + dy*dy);
+                        
+                        // Apply effects based on distance
+                        if (distance < 50) {
+                            // Repulsion effect
+                            const force = (1 - distance / 50) * 10;
+                            const angle = Math.atan2(dy, dx);
+                            const moveX = -Math.cos(angle) * force;
+                            const moveY = -Math.sin(angle) * force;
+                            
+                            charWrapper.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                            charWrapper.style.color = 'var(--highlight)';
+                            charWrapper.style.textShadow = 'var(--glow)';
+                        } else {
+                            // Reset
+                            charWrapper.style.transform = 'translate(0, 0)';
+                            charWrapper.style.color = '';
+                            charWrapper.style.textShadow = '';
+                        }
+                    });
+                });
+                
+                // Reset on mouse leave
+                element.addEventListener('mouseleave', () => {
+                    dynamicShape.style.opacity = '0';
+                    
+                    const charWrappers = element.querySelectorAll('.char-wrapper');
+                    charWrappers.forEach(charWrapper => {
+                        charWrapper.style.transform = 'translate(0, 0)';
+                        charWrapper.style.color = '';
+                        charWrapper.style.textShadow = '';
+                    });
+                });
+            });
+        }
+        
+        // Setup navigation
+        function setupNavigation() {
+            const navNodes = document.querySelectorAll('.nav-node');
+            const sections = document.querySelectorAll('.section');
+            
+            navNodes.forEach(node => {
+                node.addEventListener('click', () => {
+                    // Update active state
+                    navNodes.forEach(n => n.classList.remove('active'));
+                    node.classList.add('active');
+                    
+                    const sectionId = node.dataset.section;
+                    
+                    // Intro is special case
+                    if (sectionId === 'intro') {
+                        sections.forEach(section => {
+                            section.classList.remove('active');
+                        });
+                        
+                        // Show terminal
+                        const terminal = document.getElementById('terminal-interface');
+                        terminal.style.display = 'block';
+                        terminal.style.opacity = '1';
+                        terminal.style.transform = 'translate(-50%, -50%) scale(1)';
+                        return;
+                    }
+                    
+                    // Hide terminal if visible
+                    const terminal = document.getElementById('terminal-interface');
+                    terminal.style.opacity = '0.4';
+                    terminal.style.transform = 'translate(-50%, 40vh) scale(0.2)';
+                    
+                    // Show selected section
+                    sections.forEach(section => {
+                        if (section.id === `${sectionId}-section`) {
+                            section.classList.add('active');
+                            
+                            // Animate experience items if showing experience section
+                            if (sectionId === 'experience') {
+                                const experienceItems = section.querySelectorAll('.experience-item');
+                                experienceItems.forEach((item, index) => {
+                                    setTimeout(() => {
+                                        item.classList.add('visible');
+                                    }, 300 + index * 200);
+                                });
+                            }
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Generate living data visualization for skills
+        function generateSkillsVisualization() {
+            const container = document.getElementById('skills-visualization');
+            if (!container) return;
+            
+            // Skills data with ratings
+            const skills = [
+                { name: 'Python', value: 85 },
+                { name: 'NLP', value: 78 },
+                { name: 'Machine Learning', value: 85 },
+                { name: 'LLM Fine-tuning', value: 94 },
+                { name: 'Data Analysis', value: 92 },
+                { name: 'RLHF', value: 94 }
+            ];
+            
+            // Generate data points
+            skills.forEach((skill, index) => {
+                const angle = (index / skills.length) * Math.PI * 2;
+                const radius = (skill.value / 100) * (container.offsetWidth / 2 - 130);
+                
+                // Calculate position
+                const x = container.offsetWidth / 2 + Math.cos(angle) * radius;
+                const y = container.offsetHeight / 2 + Math.sin(angle) * radius;
+                
+                // Create data point
+                const dataPoint = document.createElement('div');
+                dataPoint.className = 'data-point';
+                dataPoint.setAttribute('data-skill', skill.name);
+                dataPoint.style.left = `${x}px`;
+                dataPoint.style.top = `${y}px`;
+                
+                dataPoint.addEventListener('mouseenter', () => {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = `${skill.name}: ${skill.value}%`;
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.left = `${x}px`;
+                    tooltip.style.top = `${y - 20}px`;
+                    tooltip.style.backgroundColor = 'var(--highlight)';
+                    tooltip.style.color = 'var(--bg-color)';
+                    tooltip.style.padding = '5px';
+                    tooltip.style.borderRadius = '3px';
+                    tooltip.style.fontSize = '12px';
+                    tooltip.style.pointerEvents = 'none';
+                    tooltip.style.zIndex = '1000';
+                    container.appendChild(tooltip);
+                    
+                    dataPoint.addEventListener('mouseleave', () => {
+                        tooltip.remove();
+                    });
+                });
+                
+                
+                
+                // Connect to center with line
+                const line = document.createElement('div');
+                line.className = 'data-line';
+                line.style.left = `${container.offsetWidth / 2}px`;
+                line.style.top = `${container.offsetHeight / 2}px`;
+                line.style.width = `${radius}px`;
+                line.style.transform = `rotate(${angle}rad)`;
+                
+                container.appendChild(line);
+                container.appendChild(dataPoint);
+                
+                // Add label
+                const label = document.createElement('div');
+                label.className = 'data-label';
+                label.textContent = skill.name;
+                label.style.position = 'absolute';
+                label.style.left = `${x}px`;
+                label.style.top = `${y}px`;
+                label.style.transform = 'translate(-50%, 50%)';
+                label.style.fontSize = '16px';
+                label.style.color = 'var(--highlight)';
+                
+                container.appendChild(label);
+            });
+            
+            // Make visualization alive
+            setInterval(() => {
+                const dataPoints = container.querySelectorAll('.data-point');
+                const lines = container.querySelectorAll('.data-line');
+                
+                dataPoints.forEach((point, index) => {
+                    // Get current position
+                    const skill = skills[index];
+                    const angle = (index / skills.length) * Math.PI * 2;
+                    
+                    // Add some oscillation to make it living
+                    const oscillation = Math.sin(Date.now() / 1000 + index) * 2;
+                    const radius = ((skill.value + oscillation) / 100) * (container.offsetWidth / 2 - 130);
+                    
+                    // Update position
+                    const x = container.offsetWidth / 2 + Math.cos(angle) * radius;
+                    const y = container.offsetHeight / 2 + Math.sin(angle) * radius;
+                    
+                    point.style.left = `${x}px`;
+                    point.style.top = `${y}px`;
+                    
+                    // Update line
+                    lines[index].style.width = `${radius}px`;
+                });
+            }, 50);
+        }
+        
+        // Make project cards and contact cards interactive
+        function setupInteractiveElements() {
+            // Make project and contact cards interactive
+            const interactiveElements = document.querySelectorAll('.interactive-element');
+            
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', (e) => {
+                    // Scale up slightly
+                    element.style.transform = 'translateY(-5px)';
+                    element.style.boxShadow = 'var(--glow)';
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                    element.style.transform = '';
+                    element.style.boxShadow = '';
+                });
+                
+                // Make the element physically responsive to cursor
+                element.setAttribute('data-cursor', 'hover');
+            });
+            
+            // Make project metrics pulse
+            const metricFills = document.querySelectorAll('.metric-fill');
+            metricFills.forEach(fill => {
+                // Initial width from style
+                const width = fill.style.width;
+                
+                // Create subtle animation
+                setInterval(() => {
+                    // Get current width value
+                    const currentWidth = parseFloat(width);
+                    // Add small random variation
+                    const variation = Math.random() * 2 - 1; // -1 to 1
+                    const newWidth = Math.max(0, Math.min(100, currentWidth + variation));
+                    fill.style.width = `${newWidth}%`;
+                }, 1000);
+            });
+        }
+    </script>
 </body>
 </html>

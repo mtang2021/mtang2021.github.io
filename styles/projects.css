@@ -1,0 +1,184 @@
+/* Section: Experience */
+.experience-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.experience-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.experience-items {
+    position: relative;
+}
+
+.experience-item {
+    position: relative;
+    margin-bottom: 40px;
+    transform-origin: left;
+    transform: scaleX(0);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.experience-item.visible {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+.experience-date {
+    font-size: 0.9rem;
+    color: var(--highlight);
+    margin-bottom: 5px;
+    font-family: var(--font-mono);
+}
+
+.experience-title {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.experience-company {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.experience-description {
+    line-height: 1.6;
+}
+
+/* Project Section */
+.project-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+.project-card {
+    border: 1px solid var(--highlight-dim);
+    padding: 20px;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: rgba(10, 10, 10, 0.7);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--highlight-dim), var(--highlight), var(--highlight-dim));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--glow);
+}
+
+.project-card:hover::before {
+    opacity: 1;
+}
+
+.project-title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.project-tech {
+    font-size: 0.9rem;
+    color: var(--highlight);
+    margin-bottom: 15px;
+    font-family: var(--font-mono);
+}
+
+.project-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.project-metric {
+    margin-top: 15px;
+}
+
+.project-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--highlight);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--highlight-dim);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.project-button:hover {
+    color: var(--text-color);
+    box-shadow: var(--glow);
+}
+
+.project-button:hover::before {
+    left: 0;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.metric-bar {
+    width: 100%;
+    height: 6px;
+    background-color: var(--highlight-dim);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.metric-fill {
+    height: 100%;
+    background-color: var(--highlight);
+    border-radius: 3px;
+    position: relative;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.metric-value {
+    text-align: right;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+}

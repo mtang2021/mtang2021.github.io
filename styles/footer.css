@@ -1,0 +1,60 @@
+/* Footer */
+.footer {
+    position: relative;
+    padding: 60px 0 30px;
+    background-color: var(--dark-gray);
+    border-top: 1px solid var(--accent-gray);
+    text-align: center;
+}
+
+.footer-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--vibrant-white);
+    margin-bottom: 20px;
+}
+
+.footer-tagline {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent-color);
+    margin-bottom: 30px;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-link {
+    color: var(--muted-white);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--accent-color);
+}
+
+.footer-divider {
+    width: 80px;
+    height: 3px;
+    background-color: var(--accent-color);
+    margin: 0 auto 30px;
+}
+
+.footer-copyright {
+    color: var(--muted-white);
+    font-size: 0.9rem;
+}
+
+.footer-copyright span {
+    color: var(--accent-color);
+}

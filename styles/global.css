@@ -1,0 +1,287 @@
+/* Core Variables */
+:root {
+    --bg-color: #090909;
+    --text-color: #e6e6e6;
+    --accent-color: #444444;
+    --highlight: #888888;
+    --highlight-dim: #333333;
+    --font-mono: 'Courier New', monospace;
+    --font-sans: 'Arial', sans-serif;
+    --glow: 0 0 10px rgba(230, 230, 230, 0.4);
+    --transition-slow: 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --transition-medium: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --transition-fast: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-mono);
+    overflow-x: hidden;
+    cursor: none; /* Hide default cursor */
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Physics-Based Cursor System */
+#cursor-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+    overflow: hidden;
+}
+
+.cursor-main {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--text-color);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    z-index: 10002;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.cursor-trail {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--text-color);
+    mix-blend-mode: difference;
+    opacity: 0.7;
+    z-index: 10001;
+    transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+.cursor-aura {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.cursor-interact {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10001;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* Core Layout */
+.ecosystem-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Particle Field Navigation */
+.particle-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: var(--highlight-dim);
+    border-radius: 50%;
+    transition: transform 0.5s ease, background-color 0.5s ease;
+}
+
+/* Navigation Nodes */
+.nav-nodes {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 5;
+}
+
+.nav-node {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--highlight-dim);
+    background-color: transparent;
+    transition: all var(--transition-medium);
+    cursor: none;
+    position: relative;
+}
+
+.nav-node::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--highlight-dim);
+    transition: all var(--transition-medium);
+}
+
+.nav-node:hover, .nav-node.active {
+    border-color: var(--highlight);
+}
+
+.nav-node:hover::before, .nav-node.active::before {
+    background-color: var(--highlight);
+}
+
+/* Section Containers */
+.section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-slow), visibility var(--transition-slow);
+    z-index: 2;
+}
+
+.section.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Typography & Hover Effects */
+.interactive-text {
+    position: relative;
+    display: inline-block;
+}
+
+.char-wrapper {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.dynamic-shape {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle, 
+        rgba(136, 136, 136, 0.2) 0%, 
+        rgba(10, 10, 10, 0) 70%
+    );
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Intro Sequence */
+.intro-sequence {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 1s ease;
+}
+
+.intro-logo {
+    font-size: 20px;
+    line-height: 1.2;
+    white-space: pre;
+    color: var(--text-color);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 1s ease, transform 1s ease;
+    text-align: center;
+}
+
+.intro-logo.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Living Data Visualizations */
+.data-visualization {
+    position: relative;
+    width: 700px;
+    height: 400px;
+    border: 1px solid var(--highlight-dim);
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+.data-point {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--highlight);
+    transform: translate(-50%, -50%);
+    transition: all 1s ease;
+}
+
+.data-line {
+    position: absolute;
+    height: 1px;
+    background-color: var(--highlight-dim);
+    transform-origin: left center;
+    transition: all 1s ease;
+}
+
+.interactive-element {
+    cursor: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .terminal-interface {
+        width: 90vw;
+        height: 90vh;
+    }
+    
+    .about-title {
+        font-size: 2.2rem;
+    }
+}

@@ -1,0 +1,45 @@
+/* Contact Section */
+.contact-content {
+    width: 100%;
+}
+
+.contact-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.contact-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--highlight-dim);
+    padding: 20px;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: rgba(10, 10, 10, 0.7);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--glow);
+}
+
+.contact-icon {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--highlight);
+}
+
+.contact-label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: var(--highlight);
+}
+
+.contact-value {
+    font-size: 1rem;
+    font-family: var(--font-mono);
+}

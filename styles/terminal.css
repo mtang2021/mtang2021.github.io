@@ -1,0 +1,142 @@
+/* Terminal Core Interface */
+.terminal-interface {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vh;
+    max-width: 1200px;
+    background-color: rgba(10, 10, 10, 0.8);
+    border: 1px solid var(--highlight-dim);
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--highlight-dim);
+    border-bottom: 1px solid var(--accent-color);
+}
+
+.terminal-title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: none;
+}
+
+.terminal-button-minimize {
+    background-color: #febc2e;
+}
+
+.terminal-button-maximize {
+    background-color: #28c841;
+}
+
+.terminal-button-close {
+    background-color: #ff5f57;
+}
+
+.terminal-content {
+    height: calc(100% - 36px);
+    padding: 20px;
+    overflow: auto;
+    font-size: 16px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--highlight) var(--bg-color); /* Firefox */
+}
+
+/* WebKit and Chromium based browsers (Chrome, Edge, Opera, Safari) */
+.terminal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 4px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+    background: var(--highlight-dim);
+    border-radius: 4px;
+    border: 1px solid var(--highlight);
+}
+
+.terminal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight);
+    box-shadow: 0 0 5px var(--highlight);
+}
+
+.terminal-content::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+.terminal-line {
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.terminal-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.terminal-prompt {
+    color: var(--highlight);
+    margin-right: 10px;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background-color: var(--text-color);
+    vertical-align: middle;
+    margin-left: 5px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.terminal-input-line {
+    display: flex;
+    margin-top: auto;
+}
+
+.terminal-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-color);
+    font-family: var(--font-mono);
+    font-size: 16px;
+}
