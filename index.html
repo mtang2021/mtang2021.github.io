@@ -352,7 +352,7 @@ Navigation Commands:
                 }
                 
                 // Physical interaction with nearby elements
-                const interactiveElements = document.querySelectorAll('.interactive-text, .nav-node, .terminal-button, .particle');
+                const interactiveElements = document.querySelectorAll('.interactive-text, .nav-node, .particle');
                 interactiveElements.forEach(el => {
                     const rect = el.getBoundingClientRect();
                     const elCenterX = rect.left + rect.width / 2;
