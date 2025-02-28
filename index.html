@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Michael Tang - Digital Ecosystem</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles/global.css">
@@ -271,13 +271,20 @@
         
         // Physics-based cursor with trails
         function setupCursor() {
+            // Skip cursor setup on touch-only devices
+            if (window.matchMedia('(hover: none)').matches) {
+                return;
+            }
+            
+            // Check if we should use simplified cursor based on device performance
+            const useSimplifiedCursor = !hasGoodPerformance();
+            
             const cursorContainer = document.getElementById('cursor-container');
             const cursorMain = document.querySelector('.cursor-main');
             const cursorAura = document.querySelector('.cursor-aura');
-            const cursorInteract = document.querySelector('.cursor-interact');
             
-            // Trail properties
-            const maxTrails = 0;
+            // Trail properties - REDUCED number of trails for better performance
+            const maxTrails = useSimplifiedCursor ? 5 : 10; // Reduced from 20
             const trails = [];
             
             // Create cursor trails
@@ -290,116 +297,151 @@
                     element: trail,
                     x: 0,
                     y: 0,
-                    // Randomize the delay for more organic movement
                     delay: i * (100 / maxTrails),
-                    size: Math.max(2, 6 - (i * 0.25)) // Gradually smaller trails
+                    size: Math.max(2, 6 - (i * 0.25))
                 });
             }
             
             // Track cursor position
             let mouseX = 0, mouseY = 0;
             let cursorX = 0, cursorY = 0;
+            let isMoving = false;
+            let moveTimeout;
+            
+            // Cache interactive elements and throttle mousemove
+            let lastMouseMoveTime = 0;
+            const mouseMoveThreshold = 16; // ~60fps
+            
+            // Pre-compute interactive elements and store them
+            const interactiveSelectors = '.interactive-text, .nav-node, .particle';
+            let cachedInteractiveElements = [];
+            
+            // Update cached elements periodically instead of on every mouse move
+            function updateCachedElements() {
+                cachedInteractiveElements = Array.from(document.querySelectorAll(interactiveSelectors));
+                setTimeout(updateCachedElements, 2000); // Update every 2 seconds
+            }
+            updateCachedElements();
             
             document.addEventListener('mousemove', (e) => {
+                // Throttle the mousemove event
+                const now = performance.now();
+                if (now - lastMouseMoveTime < mouseMoveThreshold) return;
+                lastMouseMoveTime = now;
+                
                 mouseX = e.clientX;
                 mouseY = e.clientY;
                 
-                // Update cursor scale based on movement speed
-                const dx = e.movementX;
-                const dy = e.movementY;
-                const speed = Math.sqrt(dx*dx + dy*dy);
-                const scale = 1 + Math.min(speed / 20, 0.5);
+                // Update cursor scale based on movement speed (simplified calculation)
+                const speed = Math.abs(e.movementX) + Math.abs(e.movementY);
+                const scale = 1 + Math.min(speed / 30, 0.3);
                 cursorMain.style.transform = `translate(-50%, -50%) scale(${scale})`;
                 
-                // Check if cursor is over interactive elements
+                // Check if cursor is over interactive elements - SIMPLIFIED
                 const element = document.elementFromPoint(e.clientX, e.clientY);
-                if (element && element.closest('[data-cursor="hover"]') || 
-                    element && element.tagName === 'A' || 
-                    element && element.tagName === 'BUTTON') {
+                const isInteractive = element && (
+                    element.closest('[data-cursor="hover"]') || 
+                    element.tagName === 'A' || 
+                    element.tagName === 'BUTTON'
+                );
+                
+                if (isInteractive) {
                     cursorMain.style.borderColor = 'var(--highlight)';
                     cursorMain.style.transform = `translate(-50%, -50%) scale(1.5)`;
                 } else {
                     cursorMain.style.borderColor = 'var(--text-color)';
                 }
                 
-                // Physical interaction with nearby elements
-                const interactiveElements = document.querySelectorAll('.interactive-text, .nav-node, .particle');
-                interactiveElements.forEach(el => {
-                    const rect = el.getBoundingClientRect();
-                    const elCenterX = rect.left + rect.width / 2;
-                    const elCenterY = rect.top + rect.height / 2;
-                    
-                    // Calculate distance
-                    const dx = mouseX - elCenterX;
-                    const dy = mouseY - elCenterY;
-                    const distance = Math.sqrt(dx*dx + dy*dy);
-                    
-                    // Apply physics effects based on distance
-                    if (distance < 100) {
-                        // Calculate repulsion force (inverse to distance)
-                        const force = Math.min(1 - distance / 100, 0.4);
-                        const angle = Math.atan2(dy, dx);
-                        const moveX = Math.cos(angle) * force * 5;
-                        const moveY = Math.sin(angle) * force * 5;
+                // Skip physics calculations in simplified mode
+                if (!useSimplifiedCursor) {
+                    // Use cached elements instead of querying DOM on every move
+                    cachedInteractiveElements.forEach(el => {
+                        const rect = el.getBoundingClientRect();
                         
-                        // Apply transformation
-                        if (el.classList.contains('interactive-text')) {
-                            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                        } else if (el.classList.contains('particle')) {
-                            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                            el.style.backgroundColor = 'var(--highlight)';
+                        // Quick distance check first before more expensive calculations
+                        const quickDistX = Math.abs(mouseX - (rect.left + rect.width/2));
+                        const quickDistY = Math.abs(mouseY - (rect.top + rect.height/2));
+                        
+                        // Skip detailed calculation if we're clearly too far away
+                        if (quickDistX > 120 || quickDistY > 120) return;
+                        
+                        const elCenterX = rect.left + rect.width / 2;
+                        const elCenterY = rect.top + rect.height / 2;
+                        
+                        // Simplified distance calculation
+                        const dx = mouseX - elCenterX;
+                        const dy = mouseY - elCenterY;
+                        const distance = Math.sqrt(dx*dx + dy*dy);
+                        
+                        // Apply physics effects based on distance
+                        if (distance < 100) {
+                            // Reduced force for better performance
+                            const force = Math.min(1 - distance / 100, 0.2);
+                            const angle = Math.atan2(dy, dx);
+                            const moveX = Math.cos(angle) * force * 3;
+                            const moveY = Math.sin(angle) * force * 3;
+                            
+                            // Apply transformation
+                            if (el.classList.contains('interactive-text')) {
+                                el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                            } else if (el.classList.contains('particle')) {
+                                el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                                el.style.backgroundColor = 'var(--highlight)';
+                            } else {
+                                el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                            }
                         } else {
-                            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                            // Reset when cursor is far away
+                            if (!el.classList.contains('char-wrapper')) {
+                                el.style.transform = '';
+                            }
+                            if (el.classList.contains('particle')) {
+                                el.style.backgroundColor = 'var(--highlight-dim)';
+                            }
                         }
-                    } else {
-                        // Reset when cursor is far away
-                        if (!el.classList.contains('char-wrapper')) {
-                            el.style.transform = '';
-                        }
-                        if (el.classList.contains('particle')) {
-                            el.style.backgroundColor = 'var(--highlight-dim)';
-                        }
-                    }
-                });
+                    });
+                }
             });
             
             // Animation loop for cursor and trails
             function animateCursor() {
                 // Smoothly move cursor to mouse position (easing effect)
-                cursorX += (mouseX - cursorX) * 0.1;
-                cursorY += (mouseY - cursorY) * 0.1;
+                cursorX += (mouseX - cursorX) * 0.2;
+                cursorY += (mouseY - cursorY) * 0.2;
                 
                 // Update main cursor position
-                cursorMain.style.left = `${cursorX}px`;
-                cursorMain.style.top = `${cursorY}px`;
+                cursorMain.style.left = `${Math.round(cursorX)}px`;
+                cursorMain.style.top = `${Math.round(cursorY)}px`;
                 
                 // Update cursor aura
-                cursorAura.style.left = `${cursorX}px`;
-                cursorAura.style.top = `${cursorY}px`;
+                cursorAura.style.left = `${Math.round(cursorX)}px`;
+                cursorAura.style.top = `${Math.round(cursorY)}px`;
                 
-                // Update cursor interact area
-                cursorInteract.style.left = `${cursorX}px`;
-                cursorInteract.style.top = `${cursorY}px`;
-                
-                // Update trails with staggered delay
-                trails.forEach((trail, index) => {
-                    // Calculate trail position with delay
-                    trail.x += (mouseX - trail.x) * (0.1 - index * 0.005);
-                    trail.y += (mouseY - trail.y) * (0.1 - index * 0.005);
-                    
-                    // Apply position
-                    trail.element.style.left = `${trail.x}px`;
-                    trail.element.style.top = `${trail.y}px`;
-                    
-                    // Set size
-                    trail.element.style.width = `${trail.size}px`;
-                    trail.element.style.height = `${trail.size}px`;
-                    
-                    // Fade in trails gradually
-                    if (trail.element.style.opacity < 0.7) {
-                        trail.element.style.opacity = Math.min(parseFloat(trail.element.style.opacity) + 0.05, 0.7 - (index * 0.03));
-                    }
-                });
+                // Only update trails if we're in full effect mode
+                if (!useSimplifiedCursor) {
+                    // Update trails with staggered delay
+                    trails.forEach((trail, index) => {
+                        // Calculate trail position with delay
+                        const easeFactor = 0.1 - index * 0.01;
+                        trail.x += (mouseX - trail.x) * easeFactor;
+                        trail.y += (mouseY - trail.y) * easeFactor;
+                        
+                        // Apply position - batch style updates for better performance
+                        const pos = {
+                            left: `${Math.round(trail.x)}px`,
+                            top: `${Math.round(trail.y)}px`,
+                            width: `${trail.size}px`,
+                            height: `${trail.size}px`
+                        };
+                        
+                        Object.assign(trail.element.style, pos);
+                        
+                        // Fade in trails gradually
+                        if (parseFloat(trail.element.style.opacity || 0) < 0.7) {
+                            trail.element.style.opacity = Math.min(parseFloat(trail.element.style.opacity || 0) + 0.05, 0.7 - (index * 0.03));
+                        }
+                    });
+                }
                 
                 requestAnimationFrame(animateCursor);
             }
@@ -407,11 +449,35 @@
             // Start animation loop
             animateCursor();
         }
+
+        function hasGoodPerformance() {
+            // Check if the device has hardware acceleration
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            const hasHardwareAcceleration = !!gl;
+            
+            // Check CPU cores as a proxy for performance
+            const cpuCores = navigator.hardwareConcurrency || 2;
+            
+            // Check device memory if available (Chrome only)
+            const deviceMemory = navigator.deviceMemory || 4;
+            
+            // Return true if device seems powerful enough
+            return hasHardwareAcceleration && (cpuCores >= 4 || deviceMemory >= 4);
+        }
         
-        // Generate particle field for navigation
+        // Generate particle field
         function generateParticleField() {
             const particleField = document.getElementById('particle-field');
-            const particleCount = Math.min(window.innerWidth / 10, 150); // Responsive particle count
+            
+            // OPTIMIZATION: Reduce particle count based on performance
+            const useSimpleParticles = !hasGoodPerformance();
+            const particleCount = useSimpleParticles ? 
+                Math.min(window.innerWidth / 20, 50) : // Reduced for low-performance devices
+                Math.min(window.innerWidth / 10, 120);  // Reduced from 150
+            
+            // Clear existing particles if any
+            particleField.innerHTML = '';
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -424,22 +490,38 @@
                 particle.style.left = `${x}px`;
                 particle.style.top = `${y}px`;
                 
-                // Animate particle with random duration
-                const duration = 20 + Math.random() * 20;
-                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                if (!useSimpleParticles) {
+                    // Animate particle with random duration
+                    const duration = 20 + Math.random() * 20;
+                    particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                }
                 
                 particleField.appendChild(particle);
             }
             
-            // Make particles move slightly on scroll
+            // OPTIMIZATION: Throttle scroll event
+            let lastScrollTime = 0;
+            const scrollThreshold = 50; // ms
+            
             window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                const particles = document.querySelectorAll('.particle');
+                const now = performance.now();
+                if (now - lastScrollTime < scrollThreshold) return;
+                lastScrollTime = now;
                 
-                particles.forEach((particle, index) => {
-                    // Create parallax effect with different speeds
-                    const speed = 0.05 + (index % 5) * 0.01;
-                    particle.style.transform = `translateY(${scrollY * speed}px)`;
+                const scrollY = window.scrollY;
+                
+                // OPTIMIZATION: Use requestAnimationFrame to handle scroll updates
+                requestAnimationFrame(() => {
+                    const particles = document.querySelectorAll('.particle');
+                    
+                    particles.forEach((particle, index) => {
+                        // Create parallax effect with different speeds
+                        // OPTIMIZATION: Only update every nth particle based on index for better performance
+                        if (index % 3 === 0 || !useSimpleParticles) {
+                            const speed = 0.05 + (index % 5) * 0.01;
+                            particle.style.transform = `translateY(${scrollY * speed}px)`;
+                        }
+                    });
                 });
             });
         }
@@ -690,16 +772,6 @@
                 }, 700);
             })
             
-            document.querySelector('.terminal-header').addEventListener('click', (e) => {
-                if (e.target.closest('.terminal-button')) return;
-                
-                if (isMinimized) {
-                    maximizeTerminal();
-                } else {
-                    minimizeTerminal();
-                }
-            });
-            
             // Start boot sequence after short delay
             setTimeout(() => {
                 startBootSequence();
@@ -849,7 +921,6 @@
             });
         }
         
-        // Generate living data visualization for skills
         function generateSkillsVisualization() {
             const container = document.getElementById('skills-visualization');
             if (!container) return;
@@ -863,6 +934,12 @@
                 { name: 'Data Analysis', value: 92 },
                 { name: 'RLHF', value: 94 }
             ];
+            
+            // Clear container if needed
+            container.innerHTML = '';
+            
+            // Use lightweight visualization for low-performance devices
+            const useSimpleViz = !hasGoodPerformance();
             
             // Generate data points
             skills.forEach((skill, index) => {
@@ -880,28 +957,29 @@
                 dataPoint.style.left = `${x}px`;
                 dataPoint.style.top = `${y}px`;
                 
-                dataPoint.addEventListener('mouseenter', () => {
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'tooltip';
-                    tooltip.textContent = `${skill.name}: ${skill.value}%`;
-                    tooltip.style.position = 'absolute';
-                    tooltip.style.left = `${x}px`;
-                    tooltip.style.top = `${y - 20}px`;
-                    tooltip.style.backgroundColor = 'var(--highlight)';
-                    tooltip.style.color = 'var(--bg-color)';
-                    tooltip.style.padding = '5px';
-                    tooltip.style.borderRadius = '3px';
-                    tooltip.style.fontSize = '12px';
-                    tooltip.style.pointerEvents = 'none';
-                    tooltip.style.zIndex = '1000';
-                    container.appendChild(tooltip);
-                    
-                    dataPoint.addEventListener('mouseleave', () => {
-                        tooltip.remove();
+                // Add tooltip functionality with less DOM manipulation
+                if (!useSimpleViz) {
+                    dataPoint.addEventListener('mouseenter', () => {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = `${skill.name}: ${skill.value}%`;
+                        tooltip.style.position = 'absolute';
+                        tooltip.style.left = `${x}px`;
+                        tooltip.style.top = `${y - 20}px`;
+                        tooltip.style.backgroundColor = 'var(--highlight)';
+                        tooltip.style.color = 'var(--bg-color)';
+                        tooltip.style.padding = '5px';
+                        tooltip.style.borderRadius = '3px';
+                        tooltip.style.fontSize = '12px';
+                        tooltip.style.pointerEvents = 'none';
+                        tooltip.style.zIndex = '1000';
+                        container.appendChild(tooltip);
+                        
+                        dataPoint.addEventListener('mouseleave', () => {
+                            tooltip.remove();
+                        });
                     });
-                });
-                
-                
+                }
                 
                 // Connect to center with line
                 const line = document.createElement('div');
@@ -928,32 +1006,47 @@
                 container.appendChild(label);
             });
             
-            // Make visualization alive
-            setInterval(() => {
-                const dataPoints = container.querySelectorAll('.data-point');
-                const lines = container.querySelectorAll('.data-line');
+            // Only animate for high-performance devices
+            if (!useSimpleViz) {
+                let lastAnimationTime = 0;
+                const animationThreshold = 100; // ms between animations
                 
-                dataPoints.forEach((point, index) => {
-                    // Get current position
-                    const skill = skills[index];
-                    const angle = (index / skills.length) * Math.PI * 2;
+                function animateSkills(timestamp) {
+                    if (timestamp - lastAnimationTime >= animationThreshold) {
+                        lastAnimationTime = timestamp;
+                        
+                        const dataPoints = container.querySelectorAll('.data-point');
+                        const lines = container.querySelectorAll('.data-line');
+                        
+                        dataPoints.forEach((point, index) => {
+                            // Get current position
+                            const skill = skills[index];
+                            const angle = (index / skills.length) * Math.PI * 2;
+                            
+                            // OPTIMIZATION: Reduced oscillation amount
+                            const oscillation = Math.sin(Date.now() / 1000 + index) * 2; 
+                            const radius = ((skill.value + oscillation) / 100) * (container.offsetWidth / 2 - 130);
+                            
+                            // Update position
+                            const x = container.offsetWidth / 2 + Math.cos(angle) * radius;
+                            const y = container.offsetHeight / 2 + Math.sin(angle) * radius;
+                            
+                            point.style.left = `${x}px`;
+                            point.style.top = `${y}px`;
+                            
+                            // Update line
+                            lines[index].style.width = `${radius}px`;
+                        });
+                    }
                     
-                    // Add some oscillation to make it living
-                    const oscillation = Math.sin(Date.now() / 1000 + index) * 2;
-                    const radius = ((skill.value + oscillation) / 100) * (container.offsetWidth / 2 - 130);
-                    
-                    // Update position
-                    const x = container.offsetWidth / 2 + Math.cos(angle) * radius;
-                    const y = container.offsetHeight / 2 + Math.sin(angle) * radius;
-                    
-                    point.style.left = `${x}px`;
-                    point.style.top = `${y}px`;
-                    
-                    // Update line
-                    lines[index].style.width = `${radius}px`;
-                });
-            }, 50);
+                    requestAnimationFrame(animateSkills);
+                }
+                
+                requestAnimationFrame(animateSkills);
+            }
         }
+
+        
         
         // Make project cards and contact cards interactive
         function setupInteractiveElements() {
@@ -961,8 +1054,7 @@
             const interactiveElements = document.querySelectorAll('.interactive-element');
             
             interactiveElements.forEach(element => {
-                element.addEventListener('mouseenter', (e) => {
-                    // Scale up slightly
+                element.addEventListener('mouseenter', () => {
                     element.style.transform = 'translateY(-5px)';
                     element.style.boxShadow = 'var(--glow)';
                 });
@@ -976,22 +1068,34 @@
                 element.setAttribute('data-cursor', 'hover');
             });
             
-            // Make project metrics pulse
             const metricFills = document.querySelectorAll('.metric-fill');
-            metricFills.forEach(fill => {
-                // Initial width from style
-                const width = fill.style.width;
-                
-                // Create subtle animation
-                setInterval(() => {
-                    // Get current width value
-                    const currentWidth = parseFloat(width);
-                    // Add small random variation
-                    const variation = Math.random() * 2 - 1; // -1 to 1
-                    const newWidth = Math.max(0, Math.min(100, currentWidth + variation));
-                    fill.style.width = `${newWidth}%`;
-                }, 1000);
-            });
+            
+            // Only animate for high-performance devices
+            if (hasGoodPerformance()) {
+                metricFills.forEach(fill => {
+                    // Initial width from style
+                    const baseWidth = parseFloat(fill.style.width || '0');
+                    
+                    // Use requestAnimationFrame instead of setInterval
+                    let lastPulseTime = 0;
+                    const pulseInterval = 1000; // ms
+                    
+                    function pulseFill(timestamp) {
+                        if (timestamp - lastPulseTime >= pulseInterval) {
+                            lastPulseTime = timestamp;
+                            
+                            // Add small random variation
+                            const variation = Math.random() * 1.2 - 0.6; // Reduced range
+                            const newWidth = Math.max(0, Math.min(100, baseWidth + variation));
+                            fill.style.width = `${newWidth}%`;
+                        }
+                        
+                        requestAnimationFrame(pulseFill);
+                    }
+                    
+                    requestAnimationFrame(pulseFill);
+                });
+            }
         }
     </script>
 </body>
