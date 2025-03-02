@@ -3,6 +3,33 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--highlight) var(--bg-color); /* Firefox */
+}
+
+/* WebKit and Chromium based browsers (Chrome, Edge, Opera, Safari) */
+.experience-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.experience-container::-webkit-scrollbar-track {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 4px;
+}
+
+.experience-container::-webkit-scrollbar-thumb {
+    background: var(--highlight-dim);
+    border-radius: 4px;
+    border: 1px solid var(--highlight);
+}
+
+.experience-container::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight);
+    box-shadow: 0 0 5px var(--highlight);
+}
+
+.experience-container::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .experience-header {
@@ -48,4 +75,62 @@
 
 .experience-description {
     line-height: 1.6;
+}
+
+/* Media Queries for Experience Section */
+@media (max-width: 768px) {
+    .experience-container {
+        padding: 15px;
+    }
+
+    .experience-header {
+        margin-bottom: 30px;
+    }
+
+    .experience-item {
+        margin-bottom: 30px;
+    }
+
+    .experience-title {
+        font-size: 1.3rem;
+    }
+
+    .experience-company {
+        font-size: 1rem;
+    }
+
+    .experience-description {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .experience-container {
+        padding: 10px;
+    }
+
+    .experience-header {
+        margin-bottom: 25px;
+    }
+
+    .experience-item {
+        margin-bottom: 25px;
+    }
+
+    .experience-title {
+        font-size: 1.2rem;
+    }
+
+    .experience-company {
+        font-size: 0.9rem;
+    }
+
+    .experience-date {
+        font-size: 0.8rem;
+    }
+
+    .experience-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
 }

@@ -7,11 +7,51 @@
     width: 100%;
     margin: 0 auto;
     padding: 20px;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--highlight) var(--bg-color); /* Firefox */
+}
+
+/* WebKit and Chromium based browsers (Chrome, Edge, Opera, Safari) */
+.about-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.about-container::-webkit-scrollbar-track {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 4px;
+}
+
+.about-container::-webkit-scrollbar-thumb {
+    background: var(--highlight-dim);
+    border-radius: 4px;
+    border: 1px solid var(--highlight);
+}
+
+.about-container::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight);
+    box-shadow: 0 0 5px var(--highlight);
+}
+
+.about-container::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .about-header {
     text-align: center;
     margin-bottom: 40px;
+    width: 100%;
+    padding-top: 40px;
+    overflow: hidden;
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: rgba(9, 9, 9, 0.9); /* Slightly transparent for visual effect */
+    z-index: 10;
+    padding: 20px 0;
+    backdrop-filter: blur(5px);
+    margin-bottom: 30px;
 }
 
 .about-title {
@@ -49,4 +89,35 @@
     color: var(--highlight);
     font-weight: bold;
     position: relative;
+}
+
+/* Media queries for responsive titles */
+@media (max-width: 768px) {
+    .about-header {
+        padding-top: 30px;
+        margin-bottom: 30px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    .about-title {
+        font-size: 2.2rem;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-header {
+        padding-top: 20px;
+        margin-bottom: 20px;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    
+    .about-title {
+        font-size: 1.6rem;
+        letter-spacing: -0.5px;
+        max-width: 100%;
+    }
 }

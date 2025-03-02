@@ -169,12 +169,42 @@ body {
     width: 100%;
     height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--transition-slow), visibility var(--transition-slow);
     z-index: 2;
+    overflow-y: auto;
+    padding-top: 5vh;
+    padding-bottom: 10vh;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--highlight) var(--bg-color); /* Firefox */
+}
+
+/* WebKit and Chromium based browsers (Chrome, Edge, Opera, Safari) */
+.section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.section::-webkit-scrollbar-track {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 4px;
+}
+
+.section::-webkit-scrollbar-thumb {
+    background: var(--highlight-dim);
+    border-radius: 4px;
+    border: 1px solid var(--highlight);
+}
+
+.section::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight);
+    box-shadow: 0 0 5px var(--highlight);
+}
+
+.section::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .section.active {
@@ -242,10 +272,124 @@ body {
     transform: scale(1);
 }
 
+/* Media Queries */
+@media (max-width: 768px) {
+    .terminal-interface {
+        width: 90vw;
+        height: 90vh;
+    }
+    
+    .about-title {
+        font-size: 2.2rem;
+        white-space: nowrap;
+    }
+
+    .intro-logo {
+        font-size: 8px;
+        line-height: 1;
+        transform: scale(0.8);
+    }
+    
+    .intro-logo.visible {
+        transform: scale(0.9);
+    }
+
+    /* Make sections scrollable on mobile */
+    .section {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        padding: 0 20px 60px;
+    }
+
+    /* Adjust data visualization for mobile */
+    .data-visualization {
+        width: 100%;
+        height: 350px;
+        margin: 10px 0;
+    }
+
+    /* Adjust navigation nodes for mobile */
+    .nav-nodes {
+        bottom: 20px;
+        gap: 15px;
+    }
+
+    .nav-node {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Make containers responsive */
+    .about-container,
+    .experience-container {
+        padding: 10px;
+    }
+
+    .data-point {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .intro-logo {
+        font-size: 6px;
+        transform: scale(0.7);
+    }
+    
+    .intro-logo.visible {
+        transform: scale(0.8);
+    }
+
+    /* Further adjustments for smaller screens */
+    .data-visualization {
+        height: 300px;
+    }
+
+    .about-title {
+        font-size: 1.6rem;
+        letter-spacing: -0.5px;
+        white-space: nowrap;
+    }
+
+    .about-subtitle {
+        font-size: 1rem;
+    }
+
+    .about-text {
+        font-size: 0.9rem;
+    }
+
+    .section {
+        padding: 0 15px 50px;
+    }
+
+    /* Adjust navigation for better touch targets */
+    .nav-nodes {
+        gap: 12px;
+    }
+
+    .nav-node {
+        width: 12px;
+        height: 12px;
+    }
+
+    .data-point {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .data-line {
+        height: 0.8px;
+    }
+}
+
 /* Living Data Visualizations */
 .data-visualization {
     position: relative;
-    width: 700px;
+    width: 100%;
+    max-width: 700px;
     height: 400px;
     border: 1px solid var(--highlight-dim);
     margin: 20px auto;
@@ -270,21 +414,15 @@ body {
     transition: all 1s ease;
 }
 
+.data-label {
+    font-family: var(--font-mono);
+    text-align: center;
+    white-space: nowrap;
+}
+
 .interactive-element {
     cursor: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-    .terminal-interface {
-        width: 90vw;
-        height: 90vh;
-    }
-    
-    .about-title {
-        font-size: 2.2rem;
-    }
 }
 
 /* Performance optimizations for CSS */
